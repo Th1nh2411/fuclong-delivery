@@ -1,0 +1,97 @@
+.search-result,
+.search {
+    width: 40vw;
+}
+.search-result {
+    padding: 12px 20px;
+    overflow-y: scroll;
+}
+.search-title {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+.search {
+    position: relative;
+    height: var(--search-height);
+    background-color: #333131;
+    border-radius: var(--search-border-radius);
+    padding: 0 0 0 16px;
+    border: 1.5px solid transparent;
+    display: flex;
+    input {
+        padding-right: 40px;
+        flex: 1;
+        font-size: 1.6rem;
+        background-color: transparent;
+        color: var(--secondary-color);
+        height: 100%;
+        font-weight: 600;
+        caret-color: var(--primary-color);
+    }
+    input:not(:placeholder-shown) ~ .search-btn {
+        color: var(--secondary-color);
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        width: 1px;
+        height: calc(var(--search-height) - var(--search-space-height) * 2);
+        top: var(--search-space-height);
+        right: var(--search-btn-width);
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    &:focus-within {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+.clear {
+    cursor: pointer;
+}
+
+.clear,
+.loading {
+    background-color: transparent;
+    font-size: 1.4rem;
+    display: flex;
+    position: absolute;
+    right: calc(var(--search-btn-width) + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+}
+.loading {
+    animation: spinner 1s linear infinite;
+}
+@keyframes spinner {
+    from {
+        transform: translateY(-50%) rotate(0);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+.search-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--search-btn-width);
+    height: 100%;
+    border-top-right-radius: var(--search-border-radius);
+    border-bottom-right-radius: var(--search-border-radius);
+    font-size: 2.2rem;
+    color: rgba(255, 255, 255, 0.508);
+    background-color: #333131;
+    &:hover {
+        background-color: rgba(254, 254, 254, 0.08);
+        cursor: pointer;
+    }
+    &:active {
+        background-color: rgba(101, 101, 101, 0.06);
+    }
+}
+@media (max-width: 767.98px) {
+    .search {
+        display: none;
+    }
+}

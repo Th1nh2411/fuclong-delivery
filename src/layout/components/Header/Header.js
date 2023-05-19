@@ -7,18 +7,15 @@ import Button from '../../../components/Button';
 import Menu from '../../../components/Popper/Menu';
 import Image from '../../../components/Image';
 import Search from '../Search';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import config from '../../../config';
-import { useContext, useState } from 'react';
-import { HiBars4 } from 'react-icons/hi2';
-import Modal from '../../../components/Modal/Modal';
+import { HiShoppingCart } from 'react-icons/hi';
+import { MdOutlineHistoryEdu } from 'react-icons/md';
+import Tippy from '@tippyjs/react';
 const cx = classNames.bind(styles);
 
 function Header() {
     const navigate = useNavigate();
-    const [changeBg, setChangeBg] = useState(false);
-    const [showSidebarMb, setShowSidebarMb] = useState(false);
-    const currentUser = true;
     const USER_MENU = [
         {
             icon: <AiOutlineUser />,
@@ -54,58 +51,46 @@ function Header() {
                 console.log('default');
         }
     };
-    const scrollTrigger = 60;
-    window.onscroll = () => {
-        if (window.scrollY >= scrollTrigger || window.pageYOffset >= scrollTrigger) {
-            setChangeBg(true);
-        } else {
-            setChangeBg(false);
-        }
-    };
+
     return (
-        <header className={cx('wrapper', { changeBg })}>
-            {showSidebarMb && (
-                <Modal
-                    modalClass={cx('modal-sidebar')}
-                    className={cx('sidebar-mb-wrapper')}
-                    handleClickOutside={() => setShowSidebarMb(false)}
-                >
+        <header className={cx('wrapper')}>
+            <div className={cx('inner')}>
+                <div className={cx('side-group')}>
                     <Link to={config.routes.dairy}>
-                        <div className={cx('logo-wrapper', 'logo-mb')}>
+                        <div className={cx('logo-wrapper')}>
                             <img src={images.logo} className={cx('logo')} alt="logo" />
                         </div>
                     </Link>
-                </Modal>
-            )}
-            <div className={cx('inner')}>
-                <HiBars4 onClick={() => setShowSidebarMb(true)} className={cx('show-nav-btn')} />
-                <Link to={config.routes.dairy}>
-                    <div className={cx('logo-wrapper')}>
-                        <img src={images.logo} className={cx('logo')} alt="logo" />
-                    </div>
-                </Link>
-                {/* Search */}
-                <Search />
-
-                {currentUser ? (
-                    <div className={cx('actions')}>
-                        <div className={cx('welcome-title')}>
-                            Hello <span>THinh</span>
+                    {/* Search */}
+                    <Search />
+                </div>
+                <div className={cx('side-group')}>
+                    <div className={cx('delivery-wrapper')}>
+                        <Image
+                            className={cx('delivery-img')}
+                            src="https://order.phuclong.com.vn/_next/static/images/delivery-686d7142750173aa8bc5f1d11ea195e4.png"
+                        />
+                        <div className={cx('delivery-body')}>
+                            <div className={cx('delivery-title')}>Giao hàng</div>
+                            <div className={cx('delivery-subtitle')}>
+                                A75 Lê Văn Việt, Hiệp Phú, Quận 9, Tp Hồ Chí Minh
+                            </div>
                         </div>
-                        <Menu items={USER_MENU} onChange={handleOnchangeMenu}>
-                            <Image className={cx('user-avatar')} alt="Nguyen Van A" />
-                        </Menu>
                     </div>
-                ) : (
                     <div className={cx('actions')}>
-                        <Button className={cx('custom-btn')} target="_blank">
-                            Sign In
-                        </Button>
-                        <Button primary target="_blank">
-                            Sign Up
-                        </Button>
+                        <Tippy content="Lịch sử mua hàng" placement="bottom" duration={0}>
+                            <div className={cx('action-icon')}>
+                                <MdOutlineHistoryEdu />
+                            </div>
+                        </Tippy>
+
+                        <Tippy content="Giỏ hàng" placement="bottom" duration={0}>
+                            <div className={cx('action-icon')}>
+                                <HiShoppingCart />
+                            </div>
+                        </Tippy>
                     </div>
-                )}
+                </div>
             </div>
         </header>
     );

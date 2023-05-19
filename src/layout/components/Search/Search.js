@@ -75,11 +75,14 @@ function Search() {
                 )}
             >
                 <div className={cx('search')}>
+                    <div className={cx('search-icon')}>
+                        <IoSearch />
+                    </div>
                     <input
                         ref={inputRef}
                         onChange={handleChangeInput}
                         value={searchValue}
-                        placeholder="Search recipes"
+                        placeholder="Bạn muốn đặt gì..."
                         onFocus={() => setShowResult(true)}
                     />
                     {loading ||
@@ -90,14 +93,6 @@ function Search() {
                         ))}
 
                     {loading && <AiOutlineLoading3Quarters className={cx('loading')} />}
-
-                    <button
-                        onClick={() => setShowResult(true)}
-                        className={cx('search-btn')}
-                        onMouseDown={(e) => e.preventDefault()}
-                    >
-                        <IoSearch />
-                    </button>
                 </div>
             </HeadlessTippy>
         </>

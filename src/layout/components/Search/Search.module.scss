@@ -1,6 +1,6 @@
 .search-result,
 .search {
-    width: 40vw;
+    width: 300px;
 }
 .search-result {
     padding: 12px 20px;
@@ -14,17 +14,17 @@
 .search {
     position: relative;
     height: var(--search-height);
-    background-color: #333131;
+    background-color: rgb(236, 239, 241);
     border-radius: var(--search-border-radius);
     padding: 0 0 0 16px;
     border: 1.5px solid transparent;
     display: flex;
     input {
+        color: rgb(90, 90, 90);
         padding-right: 40px;
         flex: 1;
         font-size: 1.6rem;
         background-color: transparent;
-        color: var(--secondary-color);
         height: 100%;
         font-weight: 600;
         caret-color: var(--primary-color);
@@ -32,15 +32,7 @@
     input:not(:placeholder-shown) ~ .search-btn {
         color: var(--secondary-color);
     }
-    &::after {
-        content: '';
-        position: absolute;
-        width: 1px;
-        height: calc(var(--search-height) - var(--search-space-height) * 2);
-        top: var(--search-space-height);
-        right: var(--search-btn-width);
-        background-color: rgba(255, 255, 255, 0.2);
-    }
+
     &:focus-within {
         border-color: rgba(255, 255, 255, 0.1);
     }
@@ -55,7 +47,7 @@
     font-size: 1.4rem;
     display: flex;
     position: absolute;
-    right: calc(var(--search-btn-width) + 8px);
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--secondary-color);
@@ -71,24 +63,15 @@
         transform: translateY(-50%) rotate(360deg);
     }
 }
-.search-btn {
+.search-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--search-btn-width);
+    margin-right: 15px;
     height: 100%;
-    border-top-right-radius: var(--search-border-radius);
-    border-bottom-right-radius: var(--search-border-radius);
     font-size: 2.2rem;
-    color: rgba(255, 255, 255, 0.508);
-    background-color: #333131;
-    &:hover {
-        background-color: rgba(254, 254, 254, 0.08);
-        cursor: pointer;
-    }
-    &:active {
-        background-color: rgba(101, 101, 101, 0.06);
-    }
+    color: rgb(127 127 127);
+    background-color: rgb(236, 239, 241);
 }
 @media (max-width: 767.98px) {
     .search {

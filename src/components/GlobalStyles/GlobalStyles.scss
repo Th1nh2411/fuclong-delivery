@@ -50,16 +50,16 @@
     src: url(../../assets/fonts/Nunito-Italic-VariableFont_wght.ttf);
 }
 :root {
-    --primary-color: #f8a647;
-    --secondary-color: #fff;
+    --primary-color: #0c713d;
+    --radial-gradient-orange: radial-gradient(100% 501.4% at 0% 100%, #27be70 0%, #0c713d 100%);
+    --radial-gradient-orange-2: radial-gradient(100% 501.4% at 100% 100%, #0c713d 0%, #27be70 100%);
+    --secondary-color: rgb(127 127 127);
     --bg-color: #080b14;
     --card-bg-color: #292727;
-    --default-layout-header-height: 76px;
+    --default-layout-header-height: 80px;
     --hover-color: #ff7817;
     --default-layout-width: 1200px;
     --default-layout-horizontal-spacer: 20px;
-    --sidebar-width: 250px;
-    --sidebar-width-mb: 50px;
     --black: #000;
     --white: #fff;
     --text-color: #333;
@@ -78,7 +78,6 @@ html body {
     font-family: 'Nunito', sans-serif;
     font-size: 1.6rem;
     line-height: 1.5;
-    color: var(--secondary-color);
     overflow-y: overlay;
 }
 // Scroll bar
@@ -88,11 +87,11 @@ html *::-webkit-scrollbar {
 }
 html *::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.06);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 html *::-webkit-scrollbar-track {
     border-radius: 0;
-    background-color: rgba(255, 255, 255, 0);
+    background-color: rgba(0, 0, 0, 0);
 }
 button,
 input,

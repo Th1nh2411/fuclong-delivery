@@ -51,8 +51,8 @@
 }
 :root {
     --primary-color: #0c713d;
-    --radial-gradient-orange: radial-gradient(100% 501.4% at 0% 100%, #27be70 0%, #0c713d 100%);
-    --radial-gradient-orange-2: radial-gradient(100% 501.4% at 100% 100%, #0c713d 0%, #27be70 100%);
+    --radial-gradient-bg: linear-gradient(45deg, #27be70 0%, #0c713d 100%);
+    --radial-gradient-bg-2: linear-gradient(45deg, #0c713d 0%, #27be70 100%);
     --secondary-color: rgb(127 127 127);
     --bg-color: #080b14;
     --card-bg-color: #292727;

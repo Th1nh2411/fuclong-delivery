@@ -2,7 +2,7 @@
     --search-border-radius: 92px;
     --search-height: 40px;
     --search-space-height: 9px;
-    background: var(--radial-gradient-orange);
+    background: var(--radial-gradient-bg);
     position: fixed;
     top: 0;
     left: 0;
@@ -78,6 +78,7 @@
     margin-left: 8px;
     display: flex;
     align-items: center;
+    position: relative;
     .action-icon {
         cursor: pointer;
         display: flex;
@@ -88,6 +89,16 @@
         &:hover {
             opacity: 0.8;
         }
+    }
+    .num-item-cart {
+        font-size: 1.2rem;
+        position: absolute;
+        top: 5px;
+        right: 0;
+        padding: 0px 8px;
+        background-color: red;
+        border-radius: 10px;
+        line-height: 1.3;
     }
 }
 

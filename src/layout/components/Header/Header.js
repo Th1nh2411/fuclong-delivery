@@ -87,6 +87,7 @@ function Header() {
                         <Tippy content="Giỏ hàng" placement="bottom" duration={0}>
                             <div className={cx('action-icon')}>
                                 <HiShoppingCart />
+                                <div className={cx('num-item-cart')}>2</div>
                             </div>
                         </Tippy>
                     </div>

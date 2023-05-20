@@ -1,0 +1,147 @@
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(calc(-20px));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.detail-wrapper {
+    padding: 30px;
+    min-width: 750px;
+}
+
+.detail-body {
+    display: flex;
+    flex-direction: column;
+}
+.detail-name {
+    font-size: 3.2rem;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1;
+}
+.detail-dateJoin {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+}
+.user-img {
+    margin: auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: revert;
+}
+.back-btn {
+    display: none;
+    align-items: center;
+    color: var(--primary-color);
+    font-size: 2.6rem;
+    margin-right: 10px;
+    &:hover {
+        cursor: pointer;
+    }
+}
+.detail-info {
+}
+.info-title {
+    color: #ccc;
+    letter-spacing: 1px;
+}
+
+.info-index {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .num {
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin-right: 4px;
+        letter-spacing: 2px;
+        color: #60ab00;
+    }
+    .BMI {
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 3px;
+        color: #a8a8a8;
+    }
+    .status {
+        font-size: 1.2rem;
+        line-height: 1;
+        margin-left: 1.5px;
+        color: #60ab00;
+    }
+    .under {
+        color: #0093d2;
+    }
+    .over {
+        color: var(--primary-color);
+    }
+}
+
+body .content-wrapper {
+    margin-top: 20px;
+}
+.content-list + .content-list {
+    margin-left: 10px;
+}
+.content-list {
+    background: linear-gradient(#333333, #211e1f);
+    border-radius: 10px;
+    position: relative;
+    padding: 20px;
+}
+.content-title {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    font-weight: 800;
+    // margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon {
+        display: flex;
+        align-items: center;
+        margin-left: 8px;
+    }
+}
+
+.content-body {
+}
+@keyframes heartClick {
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    75% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@media (max-width: 767.98px) {
+    .back-btn {
+        display: flex;
+    }
+    .content-list {
+        margin: 10px 0 0;
+    }
+    .detail-wrapper {
+        min-width: 0;
+    }
+}

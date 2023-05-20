@@ -2,79 +2,59 @@ import styles from './Home.module.scss';
 import classNames from 'classnames/bind';
 import Image from '../../components/Image';
 import images from '../../assets/images';
-import { useEffect, useState } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { Col, Row } from 'react-bootstrap';
+import Slider from '../../components/Slider/Slider';
+import OrderItem from '../../components/OrderItem/OrderItem';
+import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
+const orderTypes = [
+    { img: images.drink, name: 'Thức uống' },
+    { img: images.coffee, name: 'Cà phê' },
+    { img: images.tea, name: 'Trà' },
+    { img: images.bakery, name: 'Bakery' },
+];
+const orderList = [
+    { img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
+    { img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
+    { img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
+    { img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
+    { img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
+    { img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
+];
+
 function Home() {
-    const [sliderCheck, setSliderCheck] = useState(0);
-    const sliders = [images.coconutCaramel, images.longan, images.twoFor1, images.stayTuned];
-    const handleClickChangeSlide = (value) => {
-        setSliderCheck(value);
-    };
-    console.log(1);
-    useEffect(() => {
-        var counter = 0;
-        const slideInterval = setInterval(() => {
-            setSliderCheck(sliderCheck + 1);
-            if (sliderCheck === sliders.length - 1) {
-                counter = 0;
-                setSliderCheck(0);
-            }
-        }, 3000);
-        return () => clearInterval(slideInterval);
-    }, [sliderCheck]);
+    const [orderType, setOrderType] = useState(0);
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('slider-section')}>
-                <div className={cx('slide-list')}>
-                    {sliders.map((slider, index) => (
-                        <Image
+            <Slider />
+            <section className={cx('order-section')}>
+                <div className={cx('type-list')}>
+                    {orderTypes.map((type, index) => (
+                        <div
                             key={index}
-                            className={cx('slide')}
-                            src={slider}
-                            style={index === 0 ? { marginLeft: sliderCheck * -100 + '%' } : {}}
-                        />
+                            onClick={() => setOrderType(index)}
+                            className={cx('type-item', { active: orderType === index })}
+                        >
+                            <div className={cx('type-img-wrapper')}>
+                                <Image src={type.img} className={cx('type-img')} />
+                            </div>
+                            <div className={cx('type-name')}>{type.name}</div>
+                        </div>
                     ))}
                 </div>
-                <div className={cx('slide-dots')}>
-                    {sliders.map((slider, index) => (
-                        <input
-                            key={index}
-                            onChange={() => handleClickChangeSlide(index)}
-                            value={index}
-                            checked={sliderCheck == index}
-                            type="radio"
-                            name="slide-dot"
-                        />
+                <div className={cx('order-subtitle')}>
+                    Chúng tôi tin rằng từng sản phẩm trà và cà phê sẽ càng thêm hảo hạng khi được tạo ra từ sự phấn đấu
+                    không ngừng cùng niềm đam mê. Và chính kết nối dựa trên niềm tin, sự trung thực và tin yêu sẽ góp
+                    phần mang đến những nét đẹp trong văn hóa thưởng trà và cà phê ngày càng bay cao, vươn xa.
+                </div>
+                <Row className={cx('order-list')}>
+                    {orderList.map((item, index) => (
+                        <OrderItem data={item} key={index} />
                     ))}
-                </div>
-                <div
-                    onClick={() => {
-                        if (sliderCheck === sliders.length) {
-                            setSliderCheck(0);
-                        } else {
-                            setSliderCheck((prev) => prev - 1);
-                        }
-                    }}
-                    className={cx('left-slide-btn')}
-                >
-                    <FiChevronLeft />
-                </div>
-                <div
-                    onClick={() => {
-                        if (sliderCheck === sliders.length) {
-                            setSliderCheck(0);
-                        } else {
-                            setSliderCheck((prev) => prev + 1);
-                        }
-                    }}
-                    className={cx('right-slide-btn')}
-                >
-                    <FiChevronRight />
-                </div>
-            </div>
+                </Row>
+            </section>
         </div>
     );
 }

@@ -53,11 +53,11 @@
     --primary-color: #0c713d;
     --radial-gradient-bg: linear-gradient(45deg, #27be70 0%, #0c713d 100%);
     --radial-gradient-bg-2: linear-gradient(45deg, #0c713d 0%, #27be70 100%);
-    --secondary-color: rgb(127 127 127);
+    --secondary-color: rgb(95, 95, 95);
     --bg-color: #080b14;
-    --card-bg-color: #292727;
+    --card-bg-color: #fff;
     --default-layout-header-height: 80px;
-    --hover-color: #ff7817;
+    --hover-color: #1f9156;
     --default-layout-width: 1200px;
     --default-layout-horizontal-spacer: 20px;
     --black: #000;
@@ -83,7 +83,7 @@ html body {
 // Scroll bar
 html *::-webkit-scrollbar {
     border-radius: 0;
-    width: 8px;
+    width: 4px;
 }
 html *::-webkit-scrollbar-thumb {
     border-radius: 4px;
@@ -132,17 +132,18 @@ body {
         padding: 10px;
         border-radius: 8px;
         line-height: 2rem;
-        background-color: rgb(84, 84, 84);
+        background-color: rgb(241, 241, 241);
         font-weight: 700;
-        color: white;
+        color: rgb(52, 52, 52);
         max-width: 50px;
+        // box-shadow: 0px 0px 0px 10px #000;
     }
     .tippy-arrow {
         top: -8px;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
 
-        border-bottom: 8px solid rgb(84, 84, 84);
+        border-bottom: 8px solid rgb(241, 241, 241);
     }
 }
 // Input type

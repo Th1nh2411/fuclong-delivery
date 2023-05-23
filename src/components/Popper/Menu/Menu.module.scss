@@ -13,11 +13,11 @@
         background-color: transparent;
         color: var(--secondary-color);
         &:hover {
-            background-color: rgba(172, 172, 172, 0.08);
+            background-color: rgba(97, 97, 97, 0.08);
         }
     }
     .separate {
-        border-top: 1px solid rgba(172, 172, 172, 0.12);
+        border-top: 1px solid rgba(172, 172, 172, 0.22);
     }
 }
 
@@ -29,7 +29,6 @@
     flex-shrink: 0;
 }
 .menu-body {
-    overflow-y: auto;
 }
 .menu-header__back {
     background-color: transparent;

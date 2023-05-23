@@ -8,21 +8,19 @@ const cx = classNames.bind(styles);
 
 function OrderItem({ data = {} }) {
     return (
-        <Col md="3">
-            <div className={cx('order-item')}>
-                <div className={cx('order-img-wrapper')}>
-                    <Image src={data.img} className={cx('order-img')} />
-                </div>
-                <div className={cx('order-name')}>{data.name}</div>
-                <div className={cx('order-footer')}>
-                    <div className={cx('order-price')}>{data.price}.000đ</div>
-                    <div className={cx('order-add-btn')}>
-                        Đặt món
-                        <MdOutlineAddShoppingCart className={cx('add-icon')} />
-                    </div>
+        <div className={cx('order-item')}>
+            <div className={cx('order-img-wrapper')}>
+                <Image src={data.img} className={cx('order-img')} />
+            </div>
+            <div className={cx('order-name')}>{data.name}</div>
+            <div className={cx('order-footer')}>
+                <div className={cx('order-price')}>{data.price}.000đ</div>
+                <div className={cx('order-add-btn')}>
+                    Đặt món
+                    <MdOutlineAddShoppingCart className={cx('add-icon')} />
                 </div>
             </div>
-        </Col>
+        </div>
     );
 }
 

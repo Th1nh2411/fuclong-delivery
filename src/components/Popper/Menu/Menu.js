@@ -47,8 +47,8 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFc 
 
     return (
         <TippyHeadless
-            offset={[10, 6]}
-            delay={[0, 400]}
+            offset={[10, 0]}
+            delay={[0, 0]}
             hideOnClick={hideOnClick}
             interactive
             placement="top-end"

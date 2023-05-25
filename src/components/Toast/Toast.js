@@ -5,7 +5,7 @@ import { AiFillCheckCircle, AiFillCloseCircle, AiFillExclamationCircle, AiFillIn
 import { useEffect, useRef, useState } from 'react';
 const cx = classNames.bind(styles);
 
-const Toast = ({ title, content, type, duration = 3000, onClose }) => {
+const Toast = ({ title, content, type = 'success', duration = 3000, onClose }) => {
     const [show, setShow] = useState(true);
     const toastRef = useRef(null);
     useEffect(() => {
@@ -53,7 +53,6 @@ const Toast = ({ title, content, type, duration = 3000, onClose }) => {
 Toast.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
     duration: PropTypes.number,
 };
 

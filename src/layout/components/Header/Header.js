@@ -11,13 +11,42 @@ import { HiShoppingCart, HiUserCircle } from 'react-icons/hi';
 import { MdOutlineHistoryEdu } from 'react-icons/md';
 import Tippy from '@tippyjs/react';
 import Button from '../../../components/Button/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoginForm from '../../../components/LoginForm/LoginForm';
+import Toast from '../../../components/Toast/Toast';
+import LocalStorageManager from '../../../utils/LocalStorageManager';
+import axios from 'axios';
+import * as mapService from '../../../services/mapService';
 const cx = classNames.bind(styles);
 
 function Header() {
-    const login = true;
     const [showLoginForm, setShowLoginForm] = useState(false);
+    const [loginSuccess, setLoginSuccess] = useState(false);
+    const [currentLocation, setCurrentLocation] = useState(false);
+    const [address, setAddress] = useState('');
+    const localStorageManager = LocalStorageManager.getInstance();
+
+    const getLocation = () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setCurrentLocation({ latitude, longitude });
+        });
+    };
+    const getAddress = async () => {
+        const results = await mapService.getAddress(currentLocation.latitude, currentLocation.longitude);
+        if (results) {
+            console.log(results.display_name);
+            setAddress(results.display_name);
+        }
+    };
+    useEffect(() => {
+        getLocation();
+    }, []);
+    useEffect(() => {
+        getAddress();
+    }, [currentLocation]);
+
+    console.log(currentLocation, address);
     const USER_MENU = [
         {
             icon: <MdOutlineHistoryEdu />,
@@ -35,12 +64,13 @@ function Header() {
 
     const handleOnchangeMenu = (menuItem) => {
         switch (menuItem.type) {
-            case 'language':
+            case 'history':
                 //change language
                 console.log(menuItem);
                 break;
             case 'logout':
-                localStorage.removeItem('token');
+                localStorageManager.removeItem('token');
+                setLoginSuccess(0);
                 break;
             default:
                 console.log('default');
@@ -49,8 +79,17 @@ function Header() {
 
     return (
         <>
-            {showLoginForm && <LoginForm onCloseModal={() => setShowLoginForm(false)} />}
-
+            {showLoginForm && (
+                <LoginForm
+                    onCloseModal={(loginSuccess) => {
+                        setShowLoginForm(false);
+                        setLoginSuccess(loginSuccess);
+                    }}
+                />
+            )}
+            {loginSuccess && (
+                <Toast content="Đăng nhập thành công" title="Đăng nhập" onClose={() => setLoginSuccess(false)} />
+            )}
             <header className={cx('wrapper')}>
                 <div className={cx('inner')}>
                     <div className={cx('side-group')}>
@@ -70,13 +109,11 @@ function Header() {
                             />
                             <div className={cx('delivery-body')}>
                                 <div className={cx('delivery-title')}>Giao hàng</div>
-                                <div className={cx('delivery-subtitle')}>
-                                    A75 Lê Văn Việt, Hiệp Phú, Quận 9, Tp Hồ Chí Minh
-                                </div>
+                                <div className={cx('delivery-subtitle')}>{address}</div>
                             </div>
                         </div>
                         <div className={cx('actions')}>
-                            {!login ? (
+                            {localStorageManager.getItem('token') ? (
                                 <>
                                     <Menu items={USER_MENU} onChange={handleOnchangeMenu}>
                                         <div className={cx('action-icon')}>

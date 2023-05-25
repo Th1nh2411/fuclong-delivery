@@ -48,7 +48,8 @@
 .body {
     flex: 1;
     max-width: 100%;
-    overflow-y: scroll;
+    margin-right: 20px;
+    overflow-y: auto;
 }
 .footer {
     padding: 15px 25px;
@@ -138,7 +139,7 @@
 }
 .wrapper ::-webkit-scrollbar {
     border-radius: 0;
-    width: 2px;
+    width: 4px;
 }
 .wrapper ::-webkit-scrollbar-thumb {
     border-radius: 4px;

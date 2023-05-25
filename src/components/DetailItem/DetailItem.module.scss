@@ -15,8 +15,8 @@
     height: 100%;
 }
 .order-content-wrapper {
-    max-height: 460px;
-    overflow-y: scroll;
+    max-height: 420px;
+    overflow-y: auto;
     padding: 0 5px;
 }
 .order-name {
@@ -121,4 +121,16 @@
     .add-icon {
         margin-left: 4px;
     }
+}
+.detail-wrapper ::-webkit-scrollbar {
+    border-radius: 0;
+    width: 4px;
+}
+.detail-wrapper ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.detail-wrapper ::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(82, 82, 82, 0.08);
 }

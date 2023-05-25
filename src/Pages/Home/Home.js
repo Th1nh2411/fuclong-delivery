@@ -17,12 +17,12 @@ const orderTypes = [
     { img: images.bakery, name: 'Bakery' },
 ];
 const orderList = [
-    { img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
-    { img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
-    { img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
-    { img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
-    { img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
-    { img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
+    { id: 1, img: images.drinkEx, name: 'Trà Sữa Nhãn Sen', price: 55 },
+    { id: 2, img: images.drinkEx2, name: 'Nhãn đá xay', price: 55 },
+    { id: 3, img: images.drinkEx, name: 'Trà Sữa Nhãn Sen2', price: 65 },
+    { id: 4, img: images.drinkEx2, name: 'Nhãn đá xay2', price: 75 },
+    { id: 5, img: images.drinkEx, name: 'Trà Sữa Nhãn Sen3', price: 85 },
+    { id: 6, img: images.drinkEx2, name: 'Nhãn đá xay3', price: 65 },
 ];
 
 function Home() {

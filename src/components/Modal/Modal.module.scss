@@ -5,8 +5,7 @@
     left: 0;
     bottom: 0;
     display: flex;
-    animation: fadeIn linear 0.2s;
-    overflow-y: scroll;
+    overflow-x: hidden;
     z-index: 100000;
 }
 
@@ -28,6 +27,7 @@
     border-radius: 10px;
     overflow-y: scroll;
     transition: 0.3s all;
+    animation: fadeIn linear 0.2s;
 }
 
 @keyframes fadeIn {

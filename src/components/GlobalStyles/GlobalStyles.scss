@@ -81,18 +81,18 @@ html body {
     overflow-y: overlay;
 }
 // Scroll bar
-html *::-webkit-scrollbar {
-    border-radius: 0;
-    width: 4px;
-}
-html *::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.3);
-}
-html *::-webkit-scrollbar-track {
-    border-radius: 0;
-    background-color: rgba(0, 0, 0, 0);
-}
+// html *::-webkit-scrollbar {
+//     border-radius: 0;
+//     width: 4px;
+// }
+// html *::-webkit-scrollbar-thumb {
+//     border-radius: 4px;
+//     background-color: rgba(0, 0, 0, 0.3);
+// }
+// html *::-webkit-scrollbar-track {
+//     border-radius: 0;
+//     background-color: rgba(0, 0, 0, 0);
+// }
 button,
 input,
 [tabindex] {
@@ -146,9 +146,25 @@ body {
         border-bottom: 8px solid rgb(241, 241, 241);
     }
 }
+.add-item {
+    animation: shakeUp 0.3s forwards ease-in-out;
+}
 // Input type
 
 // Keyframes
+@keyframes shakeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    50% {
+        transform: translateY(-50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 @keyframes slideToast {
     from {
         opacity: 0;

@@ -90,29 +90,9 @@
             opacity: 0.8;
         }
     }
-    .num-item-cart {
-        font-size: 1.2rem;
-        position: absolute;
-        top: 5px;
-        right: 0;
-        padding: 0px 8px;
-        background-color: red;
-        border-radius: 10px;
-        line-height: 1.3;
-    }
 }
 .login-btn {
     margin-left: 10px;
 }
-//Sidebar
 
-@keyframes slideIn {
-    from {
-        transform: translateX(-50px);
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0px);
-    }
-}
+//Sidebar

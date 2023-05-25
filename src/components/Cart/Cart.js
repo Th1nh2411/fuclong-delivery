@@ -9,31 +9,19 @@ import Image from '../Image/Image';
 import { HiShoppingBag } from 'react-icons/hi';
 import { AiOutlineClose } from 'react-icons/ai';
 import CartItem from './CartItem';
+import LocalStorageManager from '../../utils/LocalStorageManager';
 
 const cx = classNames.bind(styles);
-const orderList = [
-    {
-        id: 1,
-        img: images.drinkEx,
-        name: 'Trà Sữa Nhãn Sen',
-        size: 0,
-        toppings: [],
-        price: 55,
-    },
-    {
-        id: 2,
-        img: images.drinkEx2,
-        name: 'Nhãn đá xay',
-        size: 1,
-        toppings: [
-            { name: 'Trái nhãn', id: 1 },
-            { name: 'Miếng vải', id: 2 },
-            { name: 'Miếng đào', id: 3 },
-        ],
-        price: 55,
-    },
-];
+
 function Cart({ onCloseModal = () => {} }) {
+    const [cartList, setCartList] = useState([]);
+    const localStorageManager = LocalStorageManager.getInstance();
+    useEffect(() => {
+        const storedCart = localStorageManager.getItem('cart');
+        if (storedCart) {
+            setCartList(storedCart);
+        }
+    }, []);
     return (
         <Modal
             className={cx('wrapper')}
@@ -44,18 +32,27 @@ function Cart({ onCloseModal = () => {} }) {
             <div className={cx('header')}>
                 <div className={cx('left-side')}>
                     <HiShoppingBag className={cx('icon')} />
-                    <div className={cx('title')}>Giỏ hàng của bạn (2 món)</div>
+                    <div className={cx('title')}>Giỏ hàng của bạn ({cartList.length} món)</div>
                 </div>
-                <AiOutlineClose className={cx('close-icon')} />
+                <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
             </div>
             <div className={cx('body')}>
-                {orderList.map((item, index) => (
+                {cartList.map((item, index) => (
                     <CartItem data={item} key={index} />
                 ))}
             </div>
-            <div className={cx('footer')}></div>
+            <div className={cx('footer')}>
+                <div className={cx('total')}>
+                    <div className={cx('total-title')}>Tổng tiền tạm tính:</div>
+                    <div className={cx('total-num')}>140.000đ</div>
+                </div>
+                <Button primary className={cx('checkout-btn')}>
+                    {' '}
+                    Thanh toán
+                </Button>
+            </div>
         </Modal>
     );
 }
 
-export default memo(Cart);
+export default Cart;

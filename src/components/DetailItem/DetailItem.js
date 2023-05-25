@@ -1,17 +1,17 @@
 import styles from './DetailItem.module.scss';
 import classNames from 'classnames/bind';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from '../Modal/Modal';
 import Image from '../Image/Image';
 import { MdOutlineAddShoppingCart } from 'react-icons/md';
 import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
 import { Col, Form, Row } from 'react-bootstrap';
+import LocalStorageManager from '../../utils/LocalStorageManager';
 
 const cx = classNames.bind(styles);
 const sizeOrders = [
     { price: 0, name: 'Nhỏ' },
-    { price: 10, name: 'Vừa' },
-    { price: 16, name: 'Lớn' },
+    { price: 10, name: 'Lớn ' },
 ];
 const toppings = [
     { id: 1, price: 5, name: 'Pudding' },
@@ -20,11 +20,12 @@ const toppings = [
     { id: 4, price: 10, name: 'Miếng đào' },
     { id: 5, price: 12, name: 'Kem Trứng' },
 ];
+
 function DetailItem({ data = {}, onCloseModal = () => {} }) {
     const [num, setNum] = useState(1);
-    const [priceSize, setPriceSize] = useState(0);
+    const [size, setSize] = useState(0);
     const [checkedToppings, setCheckedToppings] = useState([]);
-
+    const localStorageManager = LocalStorageManager.getInstance();
     const handleChangeToppingCheckBox = (e) => {
         if (e.target.checked) {
             setCheckedToppings([Number(e.target.value), ...checkedToppings]);
@@ -41,9 +42,56 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
                 return toppingPrice.price + total;
             }
         }, 0);
-        return data.price + priceSize + checkedToppingPrice;
-    }, [priceSize, checkedToppings]);
-    console.log(checkedToppings);
+        return data.price + size + checkedToppingPrice;
+    }, [size, checkedToppings]);
+
+    const cart = document.querySelector('#show-cart-btn');
+    const cartNum = document.querySelector('#num-item-cart');
+    const imageRef = useRef(null);
+    const handleAddItemCart = () => {
+        console.log(imageRef);
+        const speed = 800,
+            curveDelay = 300;
+        const btnY = imageRef.current ? imageRef.current.offsetTop : 200,
+            btnX = imageRef.current ? imageRef.current.offsetLeft : 1000,
+            flyingItem = imageRef.current.cloneNode();
+
+        cartNum.classList.remove('add-item');
+
+        flyingItem.classList.add('flyingBtn');
+        flyingItem.style.position = 'fixed';
+        flyingItem.style.top = `${btnY}px`;
+        flyingItem.style.left = `${btnX}px`;
+        flyingItem.style.opacity = '1';
+        flyingItem.style.height = '4rem';
+        flyingItem.style.width = '4rem';
+        flyingItem.style.transition = `all ${speed / 1000}s ease, top ${(speed + curveDelay) / 1000}s ease, left ${
+            speed / 1000
+        }s ease, transform ${speed / 1000}s ease ${(speed - 10) / 1000}s`;
+
+        document.body.appendChild(flyingItem);
+
+        flyingItem.style.top = `${cart.offsetTop}px`;
+        flyingItem.style.left = `${cart.offsetLeft}px`;
+        flyingItem.style.transform = 'scale(0)';
+
+        setTimeout(() => {
+            flyingItem.remove();
+            storeItems();
+        }, speed * 1.5);
+    };
+
+    function storeItems() {
+        cartNum.classList.add('add-item');
+        const cartList = localStorageManager.getItem('cart') || [];
+        const detailCheckedToppings = checkedToppings.map((topping) => {
+            const detailTopping = toppings.find((item) => item.id === topping);
+            return detailTopping;
+        });
+        localStorageManager.setItem('cart', [...cartList, { ...data, size: size, toppings: detailCheckedToppings }]);
+        // Change ui Num
+        cartNum.innerHTML = localStorageManager.getItem('cart').length;
+    }
     return (
         <Modal
             className={cx('detail-wrapper')}
@@ -54,7 +102,7 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
             <Row className={cx('detail-body')}>
                 <Col>
                     <div className={cx('order-img-wrapper')}>
-                        <Image src={data.img} className={cx('order-img')} />
+                        <Image ref={imageRef} src={data.img} className={cx('order-img')} />
                     </div>
                 </Col>
                 <Col>
@@ -87,12 +135,12 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
                                         <div key={index} className={cx('order-size-item')}>
                                             <Form.Check
                                                 value={item.price}
-                                                checked={item.price === priceSize}
+                                                checked={item.price === size}
                                                 type="radio"
                                                 isValid
                                                 name="order-size"
                                                 id={`size-${index}`}
-                                                onChange={(e) => setPriceSize(Number(e.target.value))}
+                                                onChange={(e) => setSize(Number(e.target.value))}
                                             ></Form.Check>
                                             <label htmlFor={`size-${index}`}>
                                                 {item.name} + {item.price}k
@@ -127,7 +175,7 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
                     </div>
                 </Col>
             </Row>
-            <div className={cx('order-add-btn')}>
+            <div onClick={handleAddItemCart} className={cx('order-add-btn')}>
                 {total}.000đ - Thêm vào giỏ hàng
                 <MdOutlineAddShoppingCart className={cx('add-icon')} />
             </div>

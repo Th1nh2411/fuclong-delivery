@@ -21,9 +21,9 @@
     &:hover {
         opacity: 0.8;
     }
-    + .wrapper {
-        margin-left: 8px;
-    }
+    // + .wrapper {
+    //     margin-left: 8px;
+    // }
     &.disable {
         pointer-events: none;
         opacity: 0.5;

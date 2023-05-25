@@ -1,7 +1,6 @@
 import styles from './Header.module.scss';
 import classNames from 'classnames/bind';
 import images from '../../../assets/images';
-import { AiOutlineUser } from 'react-icons/ai';
 import { IoLogInOutline, IoLogOutOutline } from 'react-icons/io5';
 import Menu from '../../../components/Popper/Menu';
 import Image from '../../../components/Image';
@@ -14,13 +13,11 @@ import Tippy from '@tippyjs/react';
 import Button from '../../../components/Button/Button';
 import { useState } from 'react';
 import LoginForm from '../../../components/LoginForm/LoginForm';
-import Cart from '../../../components/Cart/Cart';
 const cx = classNames.bind(styles);
 
 function Header() {
     const login = true;
     const [showLoginForm, setShowLoginForm] = useState(false);
-    const [showCart, setShowCart] = useState(false);
     const USER_MENU = [
         {
             icon: <MdOutlineHistoryEdu />,
@@ -35,13 +32,7 @@ function Header() {
             type: 'logout',
         },
     ];
-    const getUserFirstName = (name) => {
-        if (name) {
-            const nameArray = name.split(' ');
-            return nameArray[nameArray.length - 1];
-        }
-        return '';
-    };
+
     const handleOnchangeMenu = (menuItem) => {
         switch (menuItem.type) {
             case 'language':
@@ -59,7 +50,7 @@ function Header() {
     return (
         <>
             {showLoginForm && <LoginForm onCloseModal={() => setShowLoginForm(false)} />}
-            {showCart && <Cart onCloseModal={() => setShowCart(false)} />}
+
             <header className={cx('wrapper')}>
                 <div className={cx('inner')}>
                     <div className={cx('side-group')}>
@@ -102,12 +93,6 @@ function Header() {
                                     Đăng nhập
                                 </Button>
                             )}
-                            <Tippy content="Giỏ hàng" placement="bottom" duration={0}>
-                                <div onClick={() => setShowCart(true)} className={cx('action-icon')}>
-                                    <HiShoppingCart />
-                                    <div className={cx('num-item-cart')}>2</div>
-                                </div>
-                            </Tippy>
                         </div>
                     </div>
                 </div>

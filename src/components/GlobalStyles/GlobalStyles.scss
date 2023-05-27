@@ -57,13 +57,16 @@
     --bg-color: #080b14;
     --card-bg-color: #fff;
     --default-layout-header-height: 80px;
-    --hover-color: #1f9156;
+    --hover-color: #1f915633;
     --default-layout-width: 1200px;
     --default-layout-horizontal-spacer: 20px;
     --black: #000;
     --white: #fff;
     --text-color: #333;
-    // Input
+    // Search
+    --search-border-radius: 92px;
+    --search-height: 40px;
+    --search-space-height: 9px;
 }
 * {
     box-sizing: border-box;

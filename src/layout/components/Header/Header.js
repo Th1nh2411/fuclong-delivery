@@ -17,10 +17,12 @@ import Toast from '../../../components/Toast/Toast';
 import LocalStorageManager from '../../../utils/LocalStorageManager';
 import axios from 'axios';
 import * as mapService from '../../../services/mapService';
+import DetailAdress from '../../../components/DetailAdress/DetailAdress';
 const cx = classNames.bind(styles);
 
 function Header() {
     const [showLoginForm, setShowLoginForm] = useState(false);
+    const [showAddressForm, setShowAddressForm] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [currentLocation, setCurrentLocation] = useState(false);
     const [address, setAddress] = useState('');
@@ -90,6 +92,14 @@ function Header() {
             {loginSuccess && (
                 <Toast content="Đăng nhập thành công" title="Đăng nhập" onClose={() => setLoginSuccess(false)} />
             )}
+            {showAddressForm && (
+                <DetailAdress
+                    data={{ ...currentLocation, address: address }}
+                    onCloseModal={() => {
+                        setShowAddressForm(false);
+                    }}
+                />
+            )}
             <header className={cx('wrapper')}>
                 <div className={cx('inner')}>
                     <div className={cx('side-group')}>
@@ -107,9 +117,17 @@ function Header() {
                                 className={cx('delivery-img')}
                                 src="https://order.phuclong.com.vn/_next/static/images/delivery-686d7142750173aa8bc5f1d11ea195e4.png"
                             />
-                            <div className={cx('delivery-body')}>
-                                <div className={cx('delivery-title')}>Giao hàng</div>
-                                <div className={cx('delivery-subtitle')}>{address}</div>
+                            <div onClick={() => setShowAddressForm(true)} className={cx('delivery-body')}>
+                                {address ? (
+                                    <>
+                                        <div className={cx('delivery-title')}>Giao hàng</div>{' '}
+                                        <div className={cx('delivery-subtitle')}>{address}</div>
+                                    </>
+                                ) : (
+                                    <div className={cx('delivery-no-address')}>
+                                        Chọn địa chỉ giao, quán để xem chính xác các món ăn
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className={cx('actions')}>

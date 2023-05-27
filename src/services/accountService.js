@@ -9,6 +9,6 @@ export const login = async (data = {}, token) => {
         return res;
     } catch (error) {
         console.log(error);
-        return error.response.data;
+        return error.response && error.response.data;
     }
 };

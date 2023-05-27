@@ -25,10 +25,10 @@ function LoginForm({ onCloseModal = () => {} }) {
         // fetch api login
         const postLogin = async () => {
             const results = await accountService.login({ phone: phoneNumber, password });
-            if (results.isSuccess) {
+            if (results && results.isSuccess) {
                 localStorageManager.setItem('token', results.token);
                 onCloseModal(true);
-            } else if (results.isExist === false) {
+            } else if (results && results.isExist === false) {
                 setLoginStatus(results.message);
             } else {
                 setLoginStatus('Mật khẩu chưa đúng');

@@ -37,6 +37,16 @@
         border-color: rgba(255, 255, 255, 0.1);
     }
 }
+.search-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    height: 100%;
+    font-size: 2.2rem;
+    color: rgb(127 127 127);
+    background-color: rgb(236, 239, 241);
+}
 .clear {
     cursor: pointer;
 }
@@ -63,16 +73,7 @@
         transform: translateY(-50%) rotate(360deg);
     }
 }
-.search-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 15px;
-    height: 100%;
-    font-size: 2.2rem;
-    color: rgb(127 127 127);
-    background-color: rgb(236, 239, 241);
-}
+
 @media (max-width: 767.98px) {
     .search {
         display: none;

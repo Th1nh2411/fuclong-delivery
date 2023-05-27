@@ -1,7 +1,4 @@
 .wrapper {
-    --search-border-radius: 92px;
-    --search-height: 40px;
-    --search-space-height: 9px;
     background: var(--radial-gradient-bg);
     position: fixed;
     top: 0;
@@ -40,7 +37,6 @@
     border-radius: 100px;
     width: 240px;
     height: 40px;
-    text-transform: capitalize;
     background: rgb(236, 239, 241);
     font-size: 1.4rem;
     -webkit-box-align: center;
@@ -73,6 +69,10 @@
     font-size: 1.2rem;
     line-height: 1.2;
     -webkit-line-clamp: 1;
+}
+.delivery-no-address {
+    font-size: 1.2rem;
+    line-height: 1.2;
 }
 .actions {
     margin-left: 8px;

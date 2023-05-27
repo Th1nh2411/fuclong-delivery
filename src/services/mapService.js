@@ -23,7 +23,9 @@ export const searchAddress = async (q, limit = 5) => {
         params: {
             q,
             format: 'json',
+            addressdetails: 1,
             limit,
+            countrycodes: 'vn',
         },
     };
     try {

@@ -9,36 +9,42 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import config from '../../../config';
 import { HiShoppingCart, HiUserCircle } from 'react-icons/hi';
 import { MdOutlineHistoryEdu } from 'react-icons/md';
-import Tippy from '@tippyjs/react';
 import Button from '../../../components/Button/Button';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import LoginForm from '../../../components/LoginForm/LoginForm';
 import Toast from '../../../components/Toast/Toast';
 import LocalStorageManager from '../../../utils/LocalStorageManager';
-import axios from 'axios';
 import * as mapService from '../../../services/mapService';
+import * as shopService from '../../../services/shopService';
 import DetailAdress from '../../../components/DetailAdress/DetailAdress';
+import { StoreContext, actions } from '../../../store';
 const cx = classNames.bind(styles);
 
 function Header() {
     const [showLoginForm, setShowLoginForm] = useState(false);
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
-    const [currentLocation, setCurrentLocation] = useState(false);
+    const [location, setLocation] = useState(false);
     const [address, setAddress] = useState('');
     const localStorageManager = LocalStorageManager.getInstance();
+    const [state, dispatch] = useContext(StoreContext);
 
     const getLocation = () => {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
-            setCurrentLocation({ latitude, longitude });
+            setLocation({ latitude, longitude });
         });
     };
     const getAddress = async () => {
-        const results = await mapService.getAddress(currentLocation.latitude, currentLocation.longitude);
+        const results = await mapService.getAddress(location.latitude, location.longitude);
         if (results) {
-            console.log(results.display_name);
             setAddress(results.display_name);
+        }
+    };
+    const setNearestShopFromAddress = async () => {
+        const results = await shopService.getListShop(location.latitude, location.longitude);
+        if (results) {
+            dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
         }
     };
     useEffect(() => {
@@ -46,9 +52,9 @@ function Header() {
     }, []);
     useEffect(() => {
         getAddress();
-    }, [currentLocation]);
+        setNearestShopFromAddress();
+    }, [location]);
 
-    console.log(currentLocation, address);
     const USER_MENU = [
         {
             icon: <MdOutlineHistoryEdu />,
@@ -94,9 +100,12 @@ function Header() {
             )}
             {showAddressForm && (
                 <DetailAdress
-                    data={{ ...currentLocation, address: address }}
+                    data={{ ...location, address: address }}
                     onCloseModal={() => {
                         setShowAddressForm(false);
+                    }}
+                    onChangeLocation={(latitude, longitude) => {
+                        setLocation({ latitude, longitude });
                     }}
                 />
             )}

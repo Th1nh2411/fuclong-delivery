@@ -10,7 +10,10 @@ function OrderItem({ data = {} }) {
     return (
         <div className={cx('order-item')}>
             <div className={cx('order-img-wrapper')}>
-                <Image src={data.img} className={cx('order-img')} />
+                <Image src={data.image} className={cx('order-img')} />
+                <div className={cx('sale-off')}>
+                    <span className={cx('sale-off-percent')}>- 43%</span>
+                </div>
             </div>
             <div className={cx('order-name')}>{data.name}</div>
             <div className={cx('order-footer')}>

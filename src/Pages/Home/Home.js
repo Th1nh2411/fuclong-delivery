@@ -5,9 +5,10 @@ import images from '../../assets/images';
 import { Col, Row } from 'react-bootstrap';
 import Slider from '../../components/Slider/Slider';
 import OrderItem from '../../components/OrderItem/OrderItem';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DetailItem from '../../components/DetailItem/DetailItem';
-
+import * as shopService from '../../services/shopService';
+import { StoreContext } from '../../store';
 const cx = classNames.bind(styles);
 
 const orderTypes = [
@@ -29,6 +30,15 @@ function Home() {
     const [orderType, setOrderType] = useState(0);
     const [showDetailItem, setShowDetailItem] = useState();
     const [detailItem, setDetailItem] = useState(0);
+    const [menu, setMenu] = useState([]);
+    const [state, dispatch] = useContext(StoreContext);
+    const getListItem = async () => {
+        const results = await shopService.getItemShop(state.idShop, orderType);
+        setMenu(results.menu);
+    };
+    useEffect(() => {
+        getListItem();
+    }, [orderType, state.idShop]);
     return (
         <>
             {showDetailItem && <DetailItem data={detailItem} onCloseModal={() => setShowDetailItem(false)} />}
@@ -56,7 +66,7 @@ function Home() {
                         xa.
                     </div>
                     <Row className={cx('order-list')}>
-                        {orderList.map((item, index) => (
+                        {menu.map((item, index) => (
                             <Col
                                 key={index}
                                 md="3"
@@ -65,7 +75,7 @@ function Home() {
                                     setDetailItem(item);
                                 }}
                             >
-                                <OrderItem data={item} key={index} />
+                                <OrderItem data={item.Recipe} key={index} />
                             </Col>
                         ))}
                     </Row>

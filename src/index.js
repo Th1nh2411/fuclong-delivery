@@ -5,12 +5,15 @@ import reportWebVitals from './reportWebVitals';
 import { HashRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GlobalStyle from './components/GlobalStyles';
+import { StoreProvider } from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <HashRouter>
         <GlobalStyle>
-            <App />
+            <StoreProvider>
+                <App />
+            </StoreProvider>
         </GlobalStyle>
     </HashRouter>,
 );

@@ -15,9 +15,11 @@
 }
 
 .order-img-wrapper {
+    position: relative;
     padding: 45px;
     border-radius: 8px;
     background-color: #c1e4d2;
+    overflow: hidden;
 }
 .order-img {
     width: 100%;
@@ -57,4 +59,33 @@
     .add-icon {
         margin-left: 4px;
     }
+}
+.sale-off {
+    position: absolute;
+    top: 4px;
+    left: -22px;
+    text-align: center;
+    background-color: rgb(132, 205, 149);
+    border-top-right-radius: 2px;
+    transform: rotate(-35deg);
+    width: 116px;
+    padding: 2px 0px;
+}
+
+// .sale-off::before {
+//     border-width: 0px 22px 6px;
+//     border-color: transparent currentColor transparent currentColor;
+//     border-style: solid;
+//     content: '';
+//     position: absolute;
+//     bottom: -5px;
+//     left: 0px;
+// }
+
+.sale-off-percent {
+    font-size: 2rem;
+    display: block;
+    font-weight: 800;
+    color: #fff;
+    margin-left: -10px;
 }

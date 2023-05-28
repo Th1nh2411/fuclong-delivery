@@ -15,3 +15,18 @@ export const getListShop = async (latitude = 10.848046, longitude = 106.785888) 
         return error.response && error.response.data;
     }
 };
+export const getItemShop = async (idShop, idType) => {
+    const config = {
+        params: {
+            idShop,
+            idType,
+        },
+    };
+    try {
+        const res = await httpRequest.get('shop/type', config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};

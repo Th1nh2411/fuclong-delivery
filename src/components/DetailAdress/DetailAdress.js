@@ -1,6 +1,6 @@
 import styles from './DetailAdress.module.scss';
 import classNames from 'classnames/bind';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from '../Modal/Modal';
 import Image from '../Image/Image';
 import * as mapService from '../../services/mapService';
@@ -12,10 +12,11 @@ import { BiTargetLock } from 'react-icons/bi';
 import { useDebounce } from '../../hooks';
 import { AiFillCloseCircle, AiOutlineClose, AiOutlineLoading3Quarters } from 'react-icons/ai';
 import images from '../../assets/images';
+import { StoreContext, actions } from '../../store';
 
 const cx = classNames.bind(styles);
 
-function DetailAdress({ data = {}, onCloseModal = () => {} }) {
+function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = () => {} }) {
     const [location, setLocation] = useState({ latitude: data.latitude, longitude: data.longitude });
     const [address, setAddress] = useState(data.address);
     const [searchValue, setSearchValue] = useState('');
@@ -23,6 +24,19 @@ function DetailAdress({ data = {}, onCloseModal = () => {} }) {
     const [shopList, setShopList] = useState([]);
     const [loading, setLoading] = useState(false);
     const debouncedValue = useDebounce(searchValue, 500);
+    const [state, dispatch] = useContext(StoreContext);
+    const getCurrentLocation = () => {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+            onChangeLocation(latitude, longitude);
+            const results = await mapService.getAddress(latitude, longitude);
+            if (results) {
+                setAddress(results.display_name);
+            }
+        });
+    };
+
     const getShopListData = async () => {
         const results = await shopService.getListShop(location.latitude, location.longitude);
         if (results) {
@@ -61,10 +75,13 @@ function DetailAdress({ data = {}, onCloseModal = () => {} }) {
         setAddress(newAddress);
         setSearchResult([]);
         setSearchValue('');
+        onChangeLocation(latitude, longitude);
     };
     const handleClickCurrentLocation = () => {
-        setLocation({ latitude: data.latitude, longitude: data.longitude });
-        setAddress(data.address);
+        getCurrentLocation();
+    };
+    const handleChangeShop = (id) => {
+        dispatch(actions.setIdShop(id));
     };
     return (
         <Modal
@@ -76,7 +93,12 @@ function DetailAdress({ data = {}, onCloseModal = () => {} }) {
             <div className={cx('header')}>
                 <Image src={images.logo3} className={cx('header-logo')} />
                 <div className={cx('header-title')}>Giao hàng</div>
-                <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
+                <AiOutlineClose
+                    onClick={() => {
+                        onCloseModal();
+                    }}
+                    className={cx('close-icon')}
+                />
             </div>
             <div className={cx('search')}>
                 <div className={cx('search-icon')}>
@@ -121,9 +143,13 @@ function DetailAdress({ data = {}, onCloseModal = () => {} }) {
                     </div>
                     <div className={cx('divider')}></div>
                     <div className={cx('shop-result')}>
-                        <div className={cx('shop-title')}>Các cửa hàng gần bạn</div>
+                        <div className={cx('shop-title')}>Các cửa hàng gần nhất</div>
                         {shopList.map((item, index) => (
-                            <div key={index} className={cx('shop-item')}>
+                            <div
+                                onClick={() => handleChangeShop(item.detailShop.idShop)}
+                                key={index}
+                                className={cx('shop-item')}
+                            >
                                 <Image src={item.detailShop.image} className={cx('shop-img')} />
                                 <div className={cx('shop-info')}>
                                     <div className={cx('shop-address')}>{item.detailShop.address}</div>

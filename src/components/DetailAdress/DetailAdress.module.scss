@@ -1,12 +1,13 @@
 .detail-wrapper {
     width: 750px;
-    height: 560px;
+    height: 580px;
 }
 .header {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: 10px 0 2px;
 }
 .header-logo {
     width: 80px;
@@ -18,10 +19,11 @@
     color: var(--primary-color);
 }
 .close-icon {
+    padding: 20px;
     position: absolute;
-    right: 22px;
-    top: 18px;
-    font-size: 2.4rem;
+    right: 14px;
+    top: 0px;
+    font-size: 4.2rem;
     color: #ccc;
     transition: 0.1s ease-in-out all;
     &:hover {
@@ -151,6 +153,7 @@
 }
 .shop-title {
     color: var(--primary-color);
+    margin-bottom: 8px;
 }
 .shop-item {
     display: flex;

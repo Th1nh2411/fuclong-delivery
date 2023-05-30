@@ -21,7 +21,6 @@ import { StoreContext, actions } from '../../../store';
 const cx = classNames.bind(styles);
 
 function Header() {
-    const [showLoginForm, setShowLoginForm] = useState(false);
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [location, setLocation] = useState(false);
@@ -43,7 +42,7 @@ function Header() {
     };
     const setNearestShopFromAddress = async () => {
         const results = await shopService.getListShop(location.latitude, location.longitude);
-        if (results) {
+        if (results.listStoreNearest) {
             dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
         }
     };
@@ -87,10 +86,10 @@ function Header() {
 
     return (
         <>
-            {showLoginForm && (
+            {state.showLogin && (
                 <LoginForm
                     onCloseModal={(loginSuccess) => {
-                        setShowLoginForm(false);
+                        dispatch(actions.setShowLogin(false));
                         setLoginSuccess(loginSuccess);
                     }}
                 />
@@ -150,7 +149,7 @@ function Header() {
                                 </>
                             ) : (
                                 <Button
-                                    onClick={() => setShowLoginForm(true)}
+                                    onClick={() => dispatch(actions.setShowLogin(true))}
                                     className={cx('login-btn')}
                                     leftIcon={<IoLogInOutline />}
                                 >

@@ -10,11 +10,14 @@ import { HiShoppingBag } from 'react-icons/hi';
 import { AiOutlineClose } from 'react-icons/ai';
 import CartItem from './CartItem';
 import LocalStorageManager from '../../utils/LocalStorageManager';
+import DetailItem from '../DetailItem/DetailItem';
 
 const cx = classNames.bind(styles);
 
 function Cart({ onCloseModal = () => {} }) {
     const [cartList, setCartList] = useState([]);
+    const [showDetailItem, setShowDetailItem] = useState();
+    const [detailItem, setDetailItem] = useState(0);
     const localStorageManager = LocalStorageManager.getInstance();
     useEffect(() => {
         const storedCart = localStorageManager.getItem('cart');
@@ -23,35 +26,45 @@ function Cart({ onCloseModal = () => {} }) {
         }
     }, []);
     return (
-        <Modal
-            className={cx('wrapper')}
-            handleClickOutside={() => {
-                onCloseModal();
-            }}
-        >
-            <div className={cx('header')}>
-                <div className={cx('left-side')}>
-                    <HiShoppingBag className={cx('icon')} />
-                    <div className={cx('title')}>Giỏ hàng của bạn ({cartList.length} món)</div>
+        <>
+            {showDetailItem && <DetailItem data={detailItem} onCloseModal={() => setShowDetailItem(false)} />}
+            <Modal
+                className={cx('wrapper')}
+                handleClickOutside={() => {
+                    onCloseModal();
+                }}
+            >
+                <div className={cx('header')}>
+                    <div className={cx('left-side')}>
+                        <HiShoppingBag className={cx('icon')} />
+                        <div className={cx('title')}>Giỏ hàng của bạn ({cartList.length} món)</div>
+                    </div>
+                    <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
                 </div>
-                <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
-            </div>
-            <div className={cx('body')}>
-                {cartList.map((item, index) => (
-                    <CartItem data={item} key={index} />
-                ))}
-            </div>
-            <div className={cx('footer')}>
-                <div className={cx('total')}>
-                    <div className={cx('total-title')}>Tổng tiền tạm tính:</div>
-                    <div className={cx('total-num')}>140.000đ</div>
+                <div className={cx('body')}>
+                    {cartList.map((item, index) => (
+                        <CartItem
+                            onEdit={(data) => {
+                                setShowDetailItem(true);
+                                setDetailItem(data);
+                            }}
+                            data={item}
+                            key={index}
+                        />
+                    ))}
                 </div>
-                <Button primary className={cx('checkout-btn')}>
-                    {' '}
-                    Thanh toán
-                </Button>
-            </div>
-        </Modal>
+                <div className={cx('footer')}>
+                    <div className={cx('total')}>
+                        <div className={cx('total-title')}>Tổng tiền tạm tính:</div>
+                        <div className={cx('total-num')}>140.000đ</div>
+                    </div>
+                    <Button primary className={cx('checkout-btn')}>
+                        {' '}
+                        Thanh toán
+                    </Button>
+                </div>
+            </Modal>
+        </>
     );
 }
 

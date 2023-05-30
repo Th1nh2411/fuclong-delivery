@@ -7,10 +7,16 @@ import Button from '../Button';
 import images from '../../assets/images';
 import Image from '../Image/Image';
 import { AiTwotoneDelete, AiTwotoneEdit } from 'react-icons/ai';
+import LocalStorageManager from '../../utils/LocalStorageManager';
 
 const cx = classNames.bind(styles);
 
-function CartItem({ data = {} }) {
+function CartItem({ data = {}, onEdit }) {
+    const localStorageManager = LocalStorageManager.getInstance();
+    const handleEditItem = () => {
+        onEdit(data);
+    };
+    const handleDelItem = () => {};
     return (
         <div className={cx('item-wrapper')}>
             <div className={cx('item-left-side')}>
@@ -29,10 +35,10 @@ function CartItem({ data = {} }) {
                 </div>
             </div>
             <div className={cx('item-actions')}>
-                <div className={cx('action-edit')}>
+                <div onClick={handleEditItem} className={cx('action-edit')}>
                     <AiTwotoneEdit />
                 </div>
-                <div className={cx('action-del')}>
+                <div onClick={handleDelItem} className={cx('action-del')}>
                     <AiTwotoneDelete />
                 </div>
             </div>

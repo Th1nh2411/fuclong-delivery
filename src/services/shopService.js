@@ -30,3 +30,13 @@ export const getItemShop = async (idShop, idType) => {
         return error.response && error.response.data;
     }
 };
+export const getToppingList = async (idRecipe) => {
+    const config = {};
+    try {
+        const res = await httpRequest.get(`order/topping/${idRecipe}`, config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};

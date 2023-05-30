@@ -7,17 +7,20 @@ import { MdOutlineAddShoppingCart } from 'react-icons/md';
 const cx = classNames.bind(styles);
 
 function OrderItem({ data = {} }) {
+    const { Recipe, discount } = data;
     return (
         <div className={cx('order-item')}>
             <div className={cx('order-img-wrapper')}>
-                <Image src={data.image} className={cx('order-img')} />
-                <div className={cx('sale-off')}>
-                    <span className={cx('sale-off-percent')}>- 43%</span>
-                </div>
+                <Image src={Recipe.image} className={cx('order-img')} />
+                {discount !== 100 && (
+                    <div className={cx('sale-off')}>
+                        <span className={cx('sale-off-percent')}>{100 - discount}% OFF</span>
+                    </div>
+                )}
             </div>
-            <div className={cx('order-name')}>{data.name}</div>
+            <div className={cx('order-name')}>{Recipe.name}</div>
             <div className={cx('order-footer')}>
-                <div className={cx('order-price')}>{data.price}.000đ</div>
+                <div className={cx('order-price')}>{Recipe.price}.000đ</div>
                 <div className={cx('order-add-btn')}>
                     Đặt món
                     <MdOutlineAddShoppingCart className={cx('add-icon')} />

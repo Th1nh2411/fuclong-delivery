@@ -8,31 +8,28 @@ import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
 import { Col, Form, Row } from 'react-bootstrap';
 import LocalStorageManager from '../../utils/LocalStorageManager';
 import * as shopService from '../../services/shopService';
+import * as cartService from '../../services/cartService';
 import { StoreContext, actions } from '../../store';
+import { priceFormat } from '../../utils/format';
 
 const cx = classNames.bind(styles);
 const sizeOrders = [
     { price: 0, name: 'Nhỏ' },
     { price: 10, name: 'Lớn ' },
 ];
-// const toppings = [
-//     { id: 1, price: 5, name: 'Pudding' },
-//     { id: 2, price: 10, name: 'Trân châu đen' },
-//     { id: 3, price: 10, name: 'Phô mai' },
-//     { id: 4, price: 10, name: 'Miếng đào' },
-//     { id: 5, price: 12, name: 'Kem Trứng' },
-// ];
 
-function DetailItem({ data = {}, onCloseModal = () => {} }) {
-    const detailItem = data.Recipe;
+function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
+    const detailItem = data.Recipe || data;
     const [toppings, setToppings] = useState([]);
-    const [num, setNum] = useState(1);
-    const [size, setSize] = useState(0);
-    const [checkedToppings, setCheckedToppings] = useState([]);
+    const [num, setNum] = useState(data.quantityProduct || 1);
+    const [size, setSize] = useState(data.size || 0);
+    const [checkedToppings, setCheckedToppings] = useState(
+        data.listTopping ? data.listTopping.map((item) => item.idRecipe) : [],
+    );
     const localStorageManager = LocalStorageManager.getInstance();
     const [state, dispatch] = useContext(StoreContext);
     const getToppingList = async (e) => {
-        const results = await shopService.getToppingList(detailItem.idRecipe);
+        const results = await shopService.getToppingList(detailItem.idRecipe || detailItem.idProduct[1], state.idShop);
         if (results) {
             setToppings(results.listTopping);
         }
@@ -50,34 +47,41 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
     };
     const total = useMemo(() => {
         // Duyệt qua từng phần tử topping đã check, tìm phần tử đã check trong list toppings có cả price và lấy price của phần tử đó cộng vào total
-        const checkedToppingPrice = checkedToppings.reduce((total, currentId) => {
-            const toppingPrice = toppings.find((item) => item.idRecipe === currentId);
-            if (toppingPrice) {
-                return toppingPrice.price + total;
-            }
-        }, 0);
-        return detailItem.price + size + checkedToppingPrice;
-    }, [size, checkedToppings]);
+        const checkedToppingPrice =
+            checkedToppings.reduce((total, currentId) => {
+                const toppingPrice = toppings.find((item) => item.idRecipe === currentId);
+                if (toppingPrice) {
+                    return toppingPrice.price + total;
+                }
+            }, 0) || 0;
+        return ((detailItem.price * data.discount) / 100 + size + checkedToppingPrice) * num;
+    }, [num, size, checkedToppings, toppings]);
 
     const cart = document.querySelector('#show-cart-btn');
     const cartNum = document.querySelector('#num-item-cart');
     const imageRef = useRef(null);
+    const handleEditItemCart = async () => {
+        const recipesID = [detailItem.idProduct[1], ...checkedToppings].join(',');
+        const token = localStorageManager.getItem('token');
+        const results = await cartService.editCartItem(detailItem.idProduct, recipesID, num, size, token);
+        onCloseModal();
+    };
     const handleAddItemCart = () => {
         const token = localStorageManager.getItem('token');
 
         if (token) {
             const speed = 800,
                 curveDelay = 300;
-            const btnY = imageRef.current ? imageRef.current.offsetTop : 200,
-                btnX = imageRef.current ? imageRef.current.offsetLeft : 1000,
+            const imageY = imageRef.current.getBoundingClientRect().top,
+                imageX = imageRef.current.getBoundingClientRect().left,
                 flyingItem = imageRef.current.cloneNode();
-
             cartNum.classList.remove('add-item');
 
             flyingItem.classList.add('flyingBtn');
             flyingItem.style.position = 'fixed';
-            flyingItem.style.top = `${btnY}px`;
-            flyingItem.style.left = `${btnX}px`;
+            flyingItem.style.zIndex = '10000000';
+            flyingItem.style.top = `${imageY}px`;
+            flyingItem.style.left = `${imageX}px`;
             flyingItem.style.opacity = '1';
             flyingItem.style.height = '4rem';
             flyingItem.style.width = '4rem';
@@ -94,26 +98,21 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
             setTimeout(() => {
                 flyingItem.remove();
                 storeItems();
+                onCloseModal();
             }, speed * 1.5);
         } else {
             dispatch(actions.setShowLogin(true));
         }
     };
 
-    function storeItems() {
-        cartNum.classList.add('add-item');
-        const cartList = localStorageManager.getItem('cart') || [];
-        const detailCheckedToppings = checkedToppings.map((topping) => {
-            const detailTopping = toppings.find((item) => item.idRecipe === topping);
-            return detailTopping;
-        });
-        localStorageManager.setItem('cart', [
-            ...cartList,
-            { ...detailItem, size: size, toppings: detailCheckedToppings },
-        ]);
+    const storeItems = async () => {
+        const recipesID = [detailItem.idRecipe, ...checkedToppings].join(',');
+        const token = localStorageManager.getItem('token');
+        const results = await cartService.addItemToCart(recipesID, num, size, token);
         // Change ui Num
-        cartNum.innerHTML = localStorageManager.getItem('cart').length;
-    }
+        cartNum.classList.add('add-item');
+        // cartNum.innerHTML = localStorageManager.getItem('cart').length;
+    };
     return (
         <Modal
             className={cx('detail-wrapper')}
@@ -137,7 +136,9 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
                         <div className={cx('order-name')}>{detailItem.name}</div>
                         <div className={cx('order-info')}>{detailItem.info}</div>
                         <div className={cx('order-price-wrapper')}>
-                            <div className={cx('order-price')}>{detailItem.price}.000đ</div>
+                            <div className={cx('order-price')}>
+                                {priceFormat(((detailItem.price * data.discount) / 100).toFixed(3))}
+                            </div>
                             <div className={cx('order-quantity-wrapper')}>
                                 <HiMinusCircle
                                     className={cx('order-minus', { disable: num === 1 })}
@@ -176,35 +177,45 @@ function DetailItem({ data = {}, onCloseModal = () => {} }) {
                         </div>
                         <div className={cx('order-title')}>Chọn topping (tùy chọn)</div>
                         <div className={cx('order-topping-list')}>
-                            {toppings.map((topping, index) => (
-                                <label key={index} className={cx('order-topping-item')}>
-                                    <div className={cx('order-topping-title')}>{topping.name}</div>
-                                    <div className={cx('order-topping-check')}>
-                                        <span className={cx('order-topping-price')}>+{topping.price}.000đ</span>
-                                        <Form.Check
-                                            value={topping.idRecipe}
-                                            checked={
-                                                checkedToppings !== [] &&
-                                                checkedToppings.some((item) => item === topping.idRecipe)
-                                            }
-                                            type="checkbox"
-                                            isValid
-                                            id={`size-${index}`}
-                                            onChange={(e) => handleChangeToppingCheckBox(e)}
-                                        ></Form.Check>
-                                    </div>
-                                </label>
-                            ))}
+                            {toppings &&
+                                toppings.map((topping, index) => (
+                                    <label key={index} className={cx('order-topping-item')}>
+                                        <div className={cx('order-topping-title')}>{topping.name}</div>
+                                        <div className={cx('order-topping-check')}>
+                                            <span className={cx('order-topping-price')}>+{topping.price}.000đ</span>
+                                            <Form.Check
+                                                value={topping.idRecipe}
+                                                checked={
+                                                    checkedToppings !== [] &&
+                                                    checkedToppings.some((item) => item === topping.idRecipe)
+                                                }
+                                                type="checkbox"
+                                                isValid
+                                                id={`size-${index}`}
+                                                onChange={(e) => handleChangeToppingCheckBox(e)}
+                                            ></Form.Check>
+                                        </div>
+                                    </label>
+                                ))}
                         </div>
                     </div>
                 </Col>
             </Row>
-            <div onClick={handleAddItemCart} className={cx('order-add-btn')}>
-                {total}.000đ - Thêm vào giỏ hàng
+            <div
+                onClick={() => {
+                    if (editing) {
+                        handleEditItemCart();
+                    } else {
+                        handleAddItemCart();
+                    }
+                }}
+                className={cx('order-add-btn')}
+            >
+                {priceFormat(total.toFixed(3))}đ - {editing ? 'Cập nhật sản phẩm' : 'Thêm vào giỏ hàng'}
                 <MdOutlineAddShoppingCart className={cx('add-icon')} />
             </div>
         </Modal>
     );
 }
 
-export default memo(DetailItem);
+export default DetailItem;

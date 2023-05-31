@@ -154,6 +154,8 @@
 .shop-title {
     color: var(--primary-color);
     margin-bottom: 8px;
+    font-size: 1.8rem;
+    text-transform: uppercase;
 }
 .shop-item {
     display: flex;
@@ -166,8 +168,12 @@
         cursor: pointer;
     }
 }
+.shop-item.active {
+    background-color: var(--hover-color);
+}
 .shop-item + .shop-item {
     border-top: 1px solid #cccccc93;
+    margin-top: 5px;
 }
 
 .shop-img {

@@ -8,10 +8,11 @@ import images from '../../assets/images';
 import Image from '../Image/Image';
 import { AiTwotoneDelete, AiTwotoneEdit } from 'react-icons/ai';
 import LocalStorageManager from '../../utils/LocalStorageManager';
+import { priceFormat } from '../../utils/format';
 
 const cx = classNames.bind(styles);
 
-function CartItem({ data = {}, onEdit }) {
+function CartItem({ data = {}, onEdit = () => {} }) {
     const localStorageManager = LocalStorageManager.getInstance();
     const handleEditItem = () => {
         onEdit(data);
@@ -21,17 +22,18 @@ function CartItem({ data = {}, onEdit }) {
         <div className={cx('item-wrapper')}>
             <div className={cx('item-left-side')}>
                 <div className={cx('item-img-wrapper')}>
-                    <Image src={data.img} className={cx('item-img')} />
+                    <Image src={data.image} className={cx('item-img')} />
                 </div>
                 <div className={cx('item-info')}>
                     <div className={cx('item-name')}>
-                        {data.name} ({data.size ? 'L' : 'M'})
+                        {data.name} ({data.size ? 'L' : 'M'}) x{data.quantityProduct}
                     </div>
                     <div className={cx('item-topping')}>
-                        {data.toppings.length !== 0 && <span>Topping :</span>}{' '}
-                        {data.toppings.map((topping) => topping.name).join(', ')}
+                        {data.listTopping.length !== 0 && <span>Topping :</span>}{' '}
+                        {data.listTopping.map((topping) => topping.name).join(', ')}
                     </div>
-                    <div className={cx('item-price')}>{data.price}.000đ</div>
+                    <div className={cx('item-price')}>{priceFormat(data.totalProducts.toFixed(3))}đ</div>
+                    {/* <div className={cx('item-price')}></div> */}
                 </div>
             </div>
             <div className={cx('item-actions')}>

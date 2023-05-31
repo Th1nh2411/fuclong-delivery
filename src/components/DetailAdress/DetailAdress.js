@@ -148,7 +148,7 @@ function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = (
                             <div
                                 onClick={() => handleChangeShop(item.detailShop.idShop)}
                                 key={index}
-                                className={cx('shop-item')}
+                                className={cx('shop-item', { active: item.detailShop.idShop === state.idShop })}
                             >
                                 <Image src={item.detailShop.image} className={cx('shop-img')} />
                                 <div className={cx('shop-info')}>

@@ -42,7 +42,7 @@ function Header() {
     };
     const setNearestShopFromAddress = async () => {
         const results = await shopService.getListShop(location.latitude, location.longitude);
-        if (results.listStoreNearest) {
+        if (results) {
             dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
         }
     };

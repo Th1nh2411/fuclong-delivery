@@ -15,7 +15,7 @@ export const getListShop = async (latitude = 10.848046, longitude = 106.785888) 
         return error.response && error.response.data;
     }
 };
-export const getItemShop = async (idShop, idType) => {
+export const getItemFromShop = async (idShop, idType) => {
     const config = {
         params: {
             idShop,
@@ -30,10 +30,15 @@ export const getItemShop = async (idShop, idType) => {
         return error.response && error.response.data;
     }
 };
-export const getToppingList = async (idRecipe) => {
-    const config = {};
+export const getToppingList = async (idRecipe, idShop) => {
+    const config = {
+        params: {
+            idRecipe,
+            idShop,
+        },
+    };
     try {
-        const res = await httpRequest.get(`order/topping/${idRecipe}`, config);
+        const res = await httpRequest.get(`order/topping`, config);
         return res;
     } catch (error) {
         console.log(error);

@@ -8,7 +8,7 @@ import OrderItem from '../../components/OrderItem/OrderItem';
 import { useContext, useEffect, useState } from 'react';
 import DetailItem from '../../components/DetailItem/DetailItem';
 import * as shopService from '../../services/shopService';
-import { StoreContext } from '../../store';
+import { StoreContext, actions } from '../../store';
 const cx = classNames.bind(styles);
 
 const orderTypes = [
@@ -20,14 +20,13 @@ const orderTypes = [
 
 function Home() {
     const [orderType, setOrderType] = useState(0);
-    const [showDetailItem, setShowDetailItem] = useState();
-    const [detailItem, setDetailItem] = useState(0);
+    // const [showDetailItem, setShowDetailItem] = useState();
+    // const [detailItem, setDetailItem] = useState(0);
     const [menu, setMenu] = useState([]);
     const [state, dispatch] = useContext(StoreContext);
     const getListItem = async () => {
-        const results = await shopService.getItemShop(state.idShop, orderType);
-        if (results.menu) {
-            console.log(results);
+        const results = await shopService.getItemFromShop(state.idShop, orderType);
+        if (results) {
             setMenu(results.menu);
         }
     };
@@ -35,48 +34,45 @@ function Home() {
         getListItem();
     }, [orderType, state.idShop]);
     return (
-        <>
-            {showDetailItem && <DetailItem data={detailItem} onCloseModal={() => setShowDetailItem(false)} />}
-            <div className={cx('wrapper')}>
-                <Slider />
-                <section className={cx('order-section')}>
-                    <div className={cx('type-list')}>
-                        {orderTypes.map((type, index) => (
-                            <div
-                                key={index}
-                                onClick={() => setOrderType(index)}
-                                className={cx('type-item', { active: orderType === index })}
-                            >
-                                <div className={cx('type-img-wrapper')}>
-                                    <Image src={type.img} className={cx('type-img')} />
-                                </div>
-                                <div className={cx('type-name')}>{type.name}</div>
+        <div className={cx('wrapper')}>
+            <Slider />
+            <section className={cx('order-section')}>
+                <div className={cx('type-list')}>
+                    {orderTypes.map((type, index) => (
+                        <div
+                            key={index}
+                            onClick={() => setOrderType(index)}
+                            className={cx('type-item', { active: orderType === index })}
+                        >
+                            <div className={cx('type-img-wrapper')}>
+                                <Image src={type.img} className={cx('type-img')} />
                             </div>
-                        ))}
-                    </div>
-                    <div className={cx('order-subtitle')}>
-                        Chúng tôi tin rằng từng sản phẩm trà và cà phê sẽ càng thêm hảo hạng khi được tạo ra từ sự phấn
-                        đấu không ngừng cùng niềm đam mê. Và chính kết nối dựa trên niềm tin, sự trung thực và tin yêu
-                        sẽ góp phần mang đến những nét đẹp trong văn hóa thưởng trà và cà phê ngày càng bay cao, vươn
-                        xa.
-                    </div>
-                    <Row className={cx('order-list')}>
-                        {menu.map((item, index) => (
-                            <Col
-                                key={index}
-                                md="3"
-                                onClick={() => {
-                                    setShowDetailItem(true);
-                                    setDetailItem(item);
-                                }}
-                            >
-                                <OrderItem data={item} key={index} />
-                            </Col>
-                        ))}
-                    </Row>
-                </section>
-            </div>
-        </>
+                            <div className={cx('type-name')}>{type.name}</div>
+                        </div>
+                    ))}
+                </div>
+                <div className={cx('order-subtitle')}>
+                    Chúng tôi tin rằng từng sản phẩm trà và cà phê sẽ càng thêm hảo hạng khi được tạo ra từ sự phấn đấu
+                    không ngừng cùng niềm đam mê. Và chính kết nối dựa trên niềm tin, sự trung thực và tin yêu sẽ góp
+                    phần mang đến những nét đẹp trong văn hóa thưởng trà và cà phê ngày càng bay cao, vươn xa.
+                </div>
+                <Row className={cx('order-list')}>
+                    {menu.map((item, index) => (
+                        <Col
+                            key={index}
+                            md="3"
+                            onClick={() => {
+                                dispatch(actions.setDetailItem({ show: true, data: item }));
+                                // setShowDetailItem(true);
+                                // setDetailItem(item);
+                            }}
+                        >
+                            <OrderItem data={item} key={index} />
+                        </Col>
+                    ))}
+                </Row>
+            </section>
+        </div>
     );
 }
 

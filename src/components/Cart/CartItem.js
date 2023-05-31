@@ -1,23 +1,29 @@
 import styles from './Cart.module.scss';
 import classNames from 'classnames/bind';
-import { memo, useEffect, useMemo, useState } from 'react';
-import Modal from '../Modal/Modal';
-import Input from '../Input';
-import Button from '../Button';
-import images from '../../assets/images';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import Image from '../Image/Image';
 import { AiTwotoneDelete, AiTwotoneEdit } from 'react-icons/ai';
 import LocalStorageManager from '../../utils/LocalStorageManager';
 import { priceFormat } from '../../utils/format';
+import { StoreContext, actions } from '../../store';
+import * as cartService from '../../services/cartService';
 
 const cx = classNames.bind(styles);
 
-function CartItem({ data = {}, onEdit = () => {} }) {
+function CartItem({ data = {}, onChangeItem = () => {} }) {
+    const [state, dispatch] = useContext(StoreContext);
     const localStorageManager = LocalStorageManager.getInstance();
     const handleEditItem = () => {
-        onEdit(data);
+        dispatch(actions.setDetailItem({ show: true, data: data, editing: true }));
+        onChangeItem();
     };
-    const handleDelItem = () => {};
+    const handleDelItem = async () => {
+        const token = localStorageManager.getItem('token');
+        const results = await cartService.delCartItem(data.idProduct, token);
+        if (results) {
+            onChangeItem();
+        }
+    };
     return (
         <div className={cx('item-wrapper')}>
             <div className={cx('item-left-side')}>

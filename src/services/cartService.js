@@ -50,3 +50,16 @@ export const editCartItem = async (idProduct, idRecipe = 1, quantityProduct = 1,
         return error.response && error.response.data;
     }
 };
+export const delCartItem = async (idProduct, token) => {
+    const config = {
+        headers: { access_token: token },
+    };
+
+    try {
+        const res = await httpRequest.del(`order/deleteProductCart/${idProduct}`, config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};

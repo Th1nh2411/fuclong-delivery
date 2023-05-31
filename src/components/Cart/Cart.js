@@ -30,7 +30,7 @@ function Cart({ onCloseModal = () => {} }) {
     };
     useEffect(() => {
         getCartItem();
-    }, [state.detailItem.show]);
+    }, [state.detailItem.editing]);
     return (
         <>
             <Modal
@@ -51,15 +51,7 @@ function Cart({ onCloseModal = () => {} }) {
                 <div className={cx('body')}>
                     {cartData.cart &&
                         cartData.cart.map((item, index) => (
-                            <CartItem
-                                onEdit={(data) => {
-                                    // setShowDetailItem(true);
-                                    // setDetailItem(data);
-                                    dispatch(actions.setDetailItem({ show: true, data: item, editing: true }));
-                                }}
-                                data={item}
-                                key={index}
-                            />
+                            <CartItem onChangeItem={() => getCartItem()} data={item} key={index} />
                         ))}
                 </div>
                 <div className={cx('footer')}>

@@ -1,3 +1,9 @@
 export function priceFormat(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (
+        typeof number === 'number' &&
+        number
+            .toFixed(3)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    );
 }

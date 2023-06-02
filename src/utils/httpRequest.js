@@ -1,6 +1,6 @@
 import axios from 'axios';
 const httpRequest = axios.create({
-    baseURL: 'http://192.168.1.20:3007/',
+    baseURL: 'http://192.168.1.17:3007/',
 });
 export const get = async (path, header = {}) => {
     const response = await httpRequest.get(path, header);
@@ -10,8 +10,8 @@ export const post = async (path, body = {}, header = {}) => {
     const response = await httpRequest.post(path, body, header);
     return response.data;
 };
-export const del = async (path, header = {}) => {
-    const response = await httpRequest.delete(path, header);
+export const del = async (path, config = {}) => {
+    const response = await httpRequest.delete(path, config);
     return response.data;
 };
 export const put = async (path, body = {}, header = {}) => {

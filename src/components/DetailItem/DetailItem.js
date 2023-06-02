@@ -64,7 +64,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
         const recipesID = [detailItem.idProduct[1], ...checkedToppings].join(',');
         const token = localStorageManager.getItem('token');
         const results = await cartService.editCartItem(detailItem.idProduct, recipesID, num, size, token);
-        onCloseModal();
+        onCloseModal(true);
     };
     const handleAddItemCart = () => {
         const token = localStorageManager.getItem('token');
@@ -98,7 +98,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
             setTimeout(() => {
                 flyingItem.remove();
                 storeItems();
-                onCloseModal();
+                onCloseModal(true);
             }, speed * 1.5);
         } else {
             dispatch(actions.setShowLogin(true));
@@ -111,7 +111,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
         const results = await cartService.addItemToCart(recipesID, num, size, token);
         // Change ui Num
         cartNum.classList.add('add-item');
-        // cartNum.innerHTML = localStorageManager.getItem('cart').length;
+        // cartNum.innerHTML = Number(cartNum.innerHTML) + 1;
     };
     return (
         <Modal
@@ -137,7 +137,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
                         <div className={cx('order-info')}>{detailItem.info}</div>
                         <div className={cx('order-price-wrapper')}>
                             <div className={cx('order-price')}>
-                                {priceFormat(((detailItem.price * data.discount) / 100).toFixed(3))}
+                                {priceFormat((detailItem.price * data.discount) / 100)}
                             </div>
                             <div className={cx('order-quantity-wrapper')}>
                                 <HiMinusCircle
@@ -211,7 +211,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
                 }}
                 className={cx('order-add-btn')}
             >
-                {priceFormat(total.toFixed(3))}đ - {editing ? 'Cập nhật sản phẩm' : 'Thêm vào giỏ hàng'}
+                {priceFormat(total)}đ - {editing ? 'Cập nhật sản phẩm' : 'Thêm vào giỏ hàng'}
                 <MdOutlineAddShoppingCart className={cx('add-icon')} />
             </div>
         </Modal>

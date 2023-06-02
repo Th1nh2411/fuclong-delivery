@@ -80,8 +80,10 @@ function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = (
     const handleClickCurrentLocation = () => {
         getCurrentLocation();
     };
-    const handleChangeShop = (id) => {
+    const handleChangeShop = (id, distance) => {
         dispatch(actions.setIdShop(id));
+        dispatch(actions.setDistance(distance));
+        onCloseModal();
     };
     return (
         <Modal
@@ -146,7 +148,7 @@ function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = (
                         <div className={cx('shop-title')}>Các cửa hàng gần nhất</div>
                         {shopList.map((item, index) => (
                             <div
-                                onClick={() => handleChangeShop(item.detailShop.idShop)}
+                                onClick={() => handleChangeShop(item.detailShop.idShop, item.distance)}
                                 key={index}
                                 className={cx('shop-item', { active: item.detailShop.idShop === state.idShop })}
                             >

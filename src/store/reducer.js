@@ -1,4 +1,4 @@
-import { SET_DETAIL_ITEM, SET_ID_SHOP, SET_SHOW_LOGIN } from './constraints';
+import { SET_DETAIL_ITEM, SET_DISTANCE, SET_ID_SHOP, SET_SHOW_LOGIN, SET_TOAST } from './constraints';
 
 function reducer(state, action) {
     switch (action.type) {
@@ -8,6 +8,10 @@ function reducer(state, action) {
             return { ...state, showLogin: action.payload };
         case SET_DETAIL_ITEM:
             return { ...state, detailItem: action.payload };
+        case SET_TOAST:
+            return { ...state, toast: action.payload };
+        case SET_DISTANCE:
+            return { ...state, distance: action.payload };
         default:
             return state;
     }

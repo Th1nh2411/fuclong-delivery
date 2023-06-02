@@ -10,12 +10,23 @@ import { BiArrowToTop } from 'react-icons/bi';
 import LocalStorageManager from '../../utils/LocalStorageManager';
 import { StoreContext, actions } from '../../store';
 import DetailItem from '../../components/DetailItem/DetailItem';
+import LoginForm from '../../components/LoginForm/LoginForm';
+import Toast from '../../components/Toast/Toast';
+import * as cartService from '../../services/cartService';
+import config from '../../config';
+import { useLocation } from 'react-router';
+import DetailChange from '../../components/DetailChange/DetailChange';
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
     const [showCart, setShowCart] = useState(false);
+    const [cartData, setCartData] = useState({});
+    const [cartQuantity, setCartQuantity] = useState(0);
     const [backToTop, setBackToTop] = useState(false);
+    const [showDetailChange, setShowDetailChange] = useState(false);
+
     const localStorageManager = LocalStorageManager.getInstance();
     const [state, dispatch] = useContext(StoreContext);
+    const currentPath = useLocation().pathname;
     useEffect(() => {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 100) {
@@ -39,6 +50,22 @@ function DefaultLayout({ children }) {
             dispatch(actions.setShowLogin(true));
         }
     };
+    const getCartData = async () => {
+        const token = localStorageManager.getItem('token');
+        const results = await cartService.getCartItem(state.idShop, token);
+        if (results) {
+            setCartData(results);
+            const totalQuantityItem =
+                results.cart && results.cart.reduce((total, current) => current.quantityProduct + total, 0);
+            setCartQuantity(totalQuantityItem);
+        }
+        if (results.listIdProduct) {
+            setShowDetailChange(true);
+        }
+    };
+    useEffect(() => {
+        getCartData();
+    }, [state.idShop]);
     return (
         <>
             <div className={cx('wrapper')}>
@@ -49,27 +76,59 @@ function DefaultLayout({ children }) {
                 <Footer />
             </div>
 
-            {state.detailItem.show && (
-                <div style={{ zIndex: 1000001, position: 'fixed' }}>
-                    <DetailItem
-                        data={state.detailItem.data}
-                        onCloseModal={() => dispatch(actions.setDetailItem({ show: false, data: {} }))}
-                        editing={state.detailItem.editing}
-                    />
-                </div>
+            {showDetailChange && <DetailChange data={cartData} onCloseModal={() => setShowDetailChange(false)} />}
+            {state.toast.show && (
+                <Toast
+                    content={state.toast.content}
+                    title={state.toast.title}
+                    onClose={() => dispatch(actions.setToast({ show: false }))}
+                />
             )}
+
             {backToTop && (
                 <div onClick={scrollUp} className={cx('back-top-btn')}>
                     <BiArrowToTop />
                 </div>
             )}
-            {showCart && <Cart onCloseModal={() => setShowCart(false)} />}
-            <div id="show-cart-btn" onClick={handleCLickShowCart} className={cx('show-cart-btn')}>
-                <HiShoppingCart />
-                <div id="num-item-cart" className={cx('num-item-cart')}>
-                    {localStorageManager.getItem('cart') ? localStorageManager.getItem('cart').length : 0}
+            {showCart && (
+                <Cart data={cartData} onCloseModal={() => setShowCart(false)} onDelItem={() => getCartData()} />
+            )}
+            {state.detailItem.show && (
+                <DetailItem
+                    data={state.detailItem.data}
+                    onCloseModal={(editing) => {
+                        dispatch(actions.setDetailItem({ show: false, data: {} }));
+                        if (editing) {
+                            setTimeout(() => {
+                                getCartData();
+                            }, [100]);
+                        }
+                    }}
+                    editing={state.detailItem.editing}
+                />
+            )}
+            {state.showLogin && (
+                <LoginForm
+                    onCloseModal={(loginSuccess) => {
+                        dispatch(actions.setShowLogin(false));
+                        dispatch(
+                            actions.setToast({
+                                show: loginSuccess,
+                                content: 'Đăng nhập thành công',
+                                title: 'Đăng nhập',
+                            }),
+                        );
+                    }}
+                />
+            )}
+            {currentPath !== config.routes.checkout && (
+                <div id="show-cart-btn" onClick={handleCLickShowCart} className={cx('show-cart-btn')}>
+                    <HiShoppingCart />
+                    <div id="num-item-cart" className={cx('num-item-cart')}>
+                        {cartQuantity}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }

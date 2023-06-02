@@ -10,18 +10,17 @@ import * as cartService from '../../services/cartService';
 
 const cx = classNames.bind(styles);
 
-function CartItem({ data = {}, onChangeItem = () => {} }) {
+function CartItem({ data = {}, onDelItem = () => {} }) {
     const [state, dispatch] = useContext(StoreContext);
     const localStorageManager = LocalStorageManager.getInstance();
     const handleEditItem = () => {
         dispatch(actions.setDetailItem({ show: true, data: data, editing: true }));
-        onChangeItem();
     };
     const handleDelItem = async () => {
         const token = localStorageManager.getItem('token');
         const results = await cartService.delCartItem(data.idProduct, token);
         if (results) {
-            onChangeItem();
+            onDelItem();
         }
     };
     return (
@@ -38,7 +37,7 @@ function CartItem({ data = {}, onChangeItem = () => {} }) {
                         {data.listTopping.length !== 0 && <span>Topping :</span>}{' '}
                         {data.listTopping.map((topping) => topping.name).join(', ')}
                     </div>
-                    <div className={cx('item-price')}>{priceFormat(data.totalProducts.toFixed(3))}đ</div>
+                    <div className={cx('item-price')}>{priceFormat(data.totalProducts)}đ</div>
                     {/* <div className={cx('item-price')}></div> */}
                 </div>
             </div>

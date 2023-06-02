@@ -4,33 +4,34 @@ import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import Modal from '../Modal/Modal';
 import Input from '../Input';
 import Button from '../Button';
-import images from '../../assets/images';
-import Image from '../Image/Image';
 import { HiShoppingBag } from 'react-icons/hi';
 import { AiOutlineClose } from 'react-icons/ai';
 import CartItem from './CartItem';
 import LocalStorageManager from '../../utils/LocalStorageManager';
-import DetailItem from '../DetailItem/DetailItem';
 import * as cartService from '../../services/cartService';
 import { StoreContext, actions } from '../../store';
 import { priceFormat } from '../../utils/format';
+import { Link } from 'react-router-dom';
+import config from '../../config';
 
 const cx = classNames.bind(styles);
 
-function Cart({ onCloseModal = () => {} }) {
-    const [cartData, setCartData] = useState([]);
-    const localStorageManager = LocalStorageManager.getInstance();
-    const [state, dispatch] = useContext(StoreContext);
-    const getCartItem = async () => {
-        const token = localStorageManager.getItem('token');
-        const results = await cartService.getCartItem(state.idShop, token);
-        if (results) {
-            setCartData(results);
-        }
-    };
-    useEffect(() => {
-        getCartItem();
-    }, [state.detailItem.editing]);
+function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
+    // const [cartData, setCartData] = useState(data);
+    // const [shippingFee, setShippingFee] = useState(15);
+    // const localStorageManager = LocalStorageManager.getInstance();
+    // const [state, dispatch] = useContext(StoreContext);
+    // const getCartItem = async () => {
+    //     const token = localStorageManager.getItem('token');
+    //     const results = await cartService.getCartItem(state.idShop, token);
+    //     if (results) {
+    //         setCartData(results);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     getCartItem();
+    // }, [state.detailItem.editing]);
     return (
         <>
             <Modal
@@ -43,28 +44,27 @@ function Cart({ onCloseModal = () => {} }) {
                     <div className={cx('left-side')}>
                         <HiShoppingBag className={cx('icon')} />
                         <div className={cx('title')}>
-                            Giỏ hàng của bạn ({cartData.cart && cartData.cart.length} món)
+                            Giỏ hàng của bạn (
+                            {data.cart && data.cart.reduce((total, current) => current.quantityProduct + total, 0)} món)
                         </div>
                     </div>
                     <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
                 </div>
                 <div className={cx('body')}>
-                    {cartData.cart &&
-                        cartData.cart.map((item, index) => (
-                            <CartItem onChangeItem={() => getCartItem()} data={item} key={index} />
-                        ))}
+                    {data.cart &&
+                        data.cart.map((item, index) => <CartItem onDelItem={onDelItem} data={item} key={index} />)}
                 </div>
                 <div className={cx('footer')}>
                     <div className={cx('total')}>
                         <div className={cx('total-title')}>Tổng tiền tạm tính:</div>
-                        <div className={cx('total-num')}>
-                            {cartData.total && priceFormat(cartData.total.toFixed(3))}đ
-                        </div>
+                        <div className={cx('total-num')}>{data.total && priceFormat(data.total)}đ</div>
                     </div>
-                    <Button primary className={cx('checkout-btn')}>
-                        {' '}
-                        Thanh toán
-                    </Button>
+                    <Link onClick={() => onCloseModal()} to={config.routes.checkout} state={data}>
+                        <Button primary className={cx('checkout-btn')}>
+                            {' '}
+                            Thanh toán
+                        </Button>
+                    </Link>
                 </div>
             </Modal>
         </>

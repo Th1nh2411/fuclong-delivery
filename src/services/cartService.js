@@ -63,3 +63,19 @@ export const delCartItem = async (idProduct, token) => {
         return error.response && error.response.data;
     }
 };
+export const delUnavailableItem = async (listIdProduct, token) => {
+    const config = {
+        headers: { access_token: token },
+        data: {
+            listIdProduct,
+        },
+    };
+
+    try {
+        const res = await httpRequest.del(`order/deleteProductCart`, config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};

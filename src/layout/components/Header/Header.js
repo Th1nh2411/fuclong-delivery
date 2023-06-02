@@ -5,14 +5,12 @@ import { IoLogInOutline, IoLogOutOutline } from 'react-icons/io5';
 import Menu from '../../../components/Popper/Menu';
 import Image from '../../../components/Image';
 import Search from '../Search';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import config from '../../../config';
 import { HiShoppingCart, HiUserCircle } from 'react-icons/hi';
 import { MdOutlineHistoryEdu } from 'react-icons/md';
 import Button from '../../../components/Button/Button';
 import { useContext, useEffect, useState } from 'react';
-import LoginForm from '../../../components/LoginForm/LoginForm';
-import Toast from '../../../components/Toast/Toast';
 import LocalStorageManager from '../../../utils/LocalStorageManager';
 import * as mapService from '../../../services/mapService';
 import * as shopService from '../../../services/shopService';
@@ -22,12 +20,11 @@ const cx = classNames.bind(styles);
 
 function Header() {
     const [showAddressForm, setShowAddressForm] = useState(false);
-    const [loginSuccess, setLoginSuccess] = useState(false);
     const [location, setLocation] = useState(false);
     const [address, setAddress] = useState('');
     const localStorageManager = LocalStorageManager.getInstance();
     const [state, dispatch] = useContext(StoreContext);
-
+    const currentPath = useLocation().pathname;
     const getLocation = () => {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
@@ -44,6 +41,7 @@ function Header() {
         const results = await shopService.getListShop(location.latitude, location.longitude);
         if (results) {
             dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
+            dispatch(actions.setDistance(results.listStoreNearest[0].distance));
         }
     };
     useEffect(() => {
@@ -77,7 +75,6 @@ function Header() {
                 break;
             case 'logout':
                 localStorageManager.removeItem('token');
-                setLoginSuccess(0);
                 break;
             default:
                 console.log('default');
@@ -86,17 +83,6 @@ function Header() {
 
     return (
         <>
-            {state.showLogin && (
-                <LoginForm
-                    onCloseModal={(loginSuccess) => {
-                        dispatch(actions.setShowLogin(false));
-                        setLoginSuccess(loginSuccess);
-                    }}
-                />
-            )}
-            {loginSuccess && (
-                <Toast content="Đăng nhập thành công" title="Đăng nhập" onClose={() => setLoginSuccess(false)} />
-            )}
             {showAddressForm && (
                 <DetailAdress
                     data={{ ...location, address: address }}
@@ -111,7 +97,7 @@ function Header() {
             <header className={cx('wrapper')}>
                 <div className={cx('inner')}>
                     <div className={cx('side-group')}>
-                        <Link to={config.routes.dairy}>
+                        <Link to={config.routes.home}>
                             <div className={cx('logo-wrapper')}>
                                 <img src={images.logo} className={cx('logo')} alt="logo" />
                             </div>
@@ -125,7 +111,14 @@ function Header() {
                                 className={cx('delivery-img')}
                                 src="https://order.phuclong.com.vn/_next/static/images/delivery-686d7142750173aa8bc5f1d11ea195e4.png"
                             />
-                            <div onClick={() => setShowAddressForm(true)} className={cx('delivery-body')}>
+                            <div
+                                onClick={() => {
+                                    if (currentPath === config.routes.home) {
+                                        setShowAddressForm(true);
+                                    }
+                                }}
+                                className={cx('delivery-body')}
+                            >
                                 {address ? (
                                     <>
                                         <div className={cx('delivery-title')}>Giao hàng</div>{' '}

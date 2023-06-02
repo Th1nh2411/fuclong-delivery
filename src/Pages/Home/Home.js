@@ -63,8 +63,6 @@ function Home() {
                             md="3"
                             onClick={() => {
                                 dispatch(actions.setDetailItem({ show: true, data: item }));
-                                // setShowDetailItem(true);
-                                // setDetailItem(item);
                             }}
                         >
                             <OrderItem data={item} key={index} />

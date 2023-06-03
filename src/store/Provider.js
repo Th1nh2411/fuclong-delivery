@@ -8,6 +8,7 @@ function Provider({ children }) {
         distance: 0,
         showLogin: false,
         detailItem: { show: false, data: {}, editing: false },
+        detailAddress: { show: false, address: '' },
         toast: { show: false, content: '', title: '' },
     };
     const [state, dispatch] = useReducer(reducer, initState);

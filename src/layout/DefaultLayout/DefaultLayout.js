@@ -16,6 +16,9 @@ import * as cartService from '../../services/cartService';
 import config from '../../config';
 import { useLocation } from 'react-router';
 import DetailChange from '../../components/DetailChange/DetailChange';
+import * as mapService from '../../services/mapService';
+import * as shopService from '../../services/shopService';
+import DetailAddress from '../../components/DetailAddress';
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
     const [showCart, setShowCart] = useState(false);
@@ -23,6 +26,10 @@ function DefaultLayout({ children }) {
     const [cartQuantity, setCartQuantity] = useState(0);
     const [backToTop, setBackToTop] = useState(false);
     const [showDetailChange, setShowDetailChange] = useState(false);
+
+    const [showAddressForm, setShowAddressForm] = useState(false);
+    const [location, setLocation] = useState(false);
+    const [address, setAddress] = useState('');
 
     const localStorageManager = LocalStorageManager.getInstance();
     const [state, dispatch] = useContext(StoreContext);
@@ -42,6 +49,7 @@ function DefaultLayout({ children }) {
             behavior: 'smooth',
         });
     };
+
     const handleCLickShowCart = () => {
         const token = localStorageManager.getItem('token');
         if (token) {
@@ -66,6 +74,34 @@ function DefaultLayout({ children }) {
     useEffect(() => {
         getCartData();
     }, [state.idShop]);
+
+    const getLocation = () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+        });
+    };
+    const getAddress = async () => {
+        const results = await mapService.getAddress(location.latitude, location.longitude);
+        if (results) {
+            setAddress(results.display_name);
+            dispatch(actions.setDetailAddress({ address: results.display_name }));
+        }
+    };
+    const setNearestShopFromAddress = async () => {
+        const results = await shopService.getListShop(location.latitude, location.longitude);
+        if (results) {
+            dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
+            dispatch(actions.setDistance(results.listStoreNearest[0].distance));
+        }
+    };
+    useEffect(() => {
+        getLocation();
+    }, []);
+    useEffect(() => {
+        getAddress();
+        setNearestShopFromAddress();
+    }, [location]);
     return (
         <>
             <div className={cx('wrapper')}>
@@ -105,6 +141,17 @@ function DefaultLayout({ children }) {
                         }
                     }}
                     editing={state.detailItem.editing}
+                />
+            )}
+            {state.detailAddress.show && (
+                <DetailAddress
+                    data={{ ...location, address: address }}
+                    onCloseModal={() => {
+                        dispatch(actions.setDetailAddress({ show: false }));
+                    }}
+                    onChangeLocation={(latitude, longitude) => {
+                        setLocation({ latitude, longitude });
+                    }}
                 />
             )}
             {state.showLogin && (

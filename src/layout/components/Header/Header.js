@@ -12,45 +12,14 @@ import { MdOutlineHistoryEdu } from 'react-icons/md';
 import Button from '../../../components/Button/Button';
 import { useContext, useEffect, useState } from 'react';
 import LocalStorageManager from '../../../utils/LocalStorageManager';
-import * as mapService from '../../../services/mapService';
-import * as shopService from '../../../services/shopService';
-import DetailAdress from '../../../components/DetailAdress/DetailAdress';
+
 import { StoreContext, actions } from '../../../store';
 const cx = classNames.bind(styles);
 
 function Header() {
-    const [showAddressForm, setShowAddressForm] = useState(false);
-    const [location, setLocation] = useState(false);
-    const [address, setAddress] = useState('');
     const localStorageManager = LocalStorageManager.getInstance();
     const [state, dispatch] = useContext(StoreContext);
     const currentPath = useLocation().pathname;
-    const getLocation = () => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setLocation({ latitude, longitude });
-        });
-    };
-    const getAddress = async () => {
-        const results = await mapService.getAddress(location.latitude, location.longitude);
-        if (results) {
-            setAddress(results.display_name);
-        }
-    };
-    const setNearestShopFromAddress = async () => {
-        const results = await shopService.getListShop(location.latitude, location.longitude);
-        if (results) {
-            dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
-            dispatch(actions.setDistance(results.listStoreNearest[0].distance));
-        }
-    };
-    useEffect(() => {
-        getLocation();
-    }, []);
-    useEffect(() => {
-        getAddress();
-        setNearestShopFromAddress();
-    }, [location]);
 
     const USER_MENU = [
         {
@@ -75,6 +44,7 @@ function Header() {
                 break;
             case 'logout':
                 localStorageManager.removeItem('token');
+                localStorageManager.getItem('token');
                 break;
             default:
                 console.log('default');
@@ -83,17 +53,6 @@ function Header() {
 
     return (
         <>
-            {showAddressForm && (
-                <DetailAdress
-                    data={{ ...location, address: address }}
-                    onCloseModal={() => {
-                        setShowAddressForm(false);
-                    }}
-                    onChangeLocation={(latitude, longitude) => {
-                        setLocation({ latitude, longitude });
-                    }}
-                />
-            )}
             <header className={cx('wrapper')}>
                 <div className={cx('inner')}>
                     <div className={cx('side-group')}>
@@ -114,15 +73,16 @@ function Header() {
                             <div
                                 onClick={() => {
                                     if (currentPath === config.routes.home) {
-                                        setShowAddressForm(true);
+                                        // setShowAddressForm(true);
+                                        dispatch(actions.setDetailAddress({ show: true }));
                                     }
                                 }}
                                 className={cx('delivery-body')}
                             >
-                                {address ? (
+                                {state.detailAddress.address ? (
                                     <>
                                         <div className={cx('delivery-title')}>Giao hàng</div>{' '}
-                                        <div className={cx('delivery-subtitle')}>{address}</div>
+                                        <div className={cx('delivery-subtitle')}>{state.detailAddress.address}</div>
                                     </>
                                 ) : (
                                     <div className={cx('delivery-no-address')}>

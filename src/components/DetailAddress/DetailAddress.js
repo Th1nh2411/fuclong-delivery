@@ -1,4 +1,4 @@
-import styles from './DetailAdress.module.scss';
+import styles from './DetailAddress.module.scss';
 import classNames from 'classnames/bind';
 import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from '../Modal/Modal';
@@ -16,7 +16,7 @@ import { StoreContext, actions } from '../../store';
 
 const cx = classNames.bind(styles);
 
-function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = () => {} }) {
+function DetailAddress({ data = {}, onCloseModal = () => {}, onChangeLocation = () => {} }) {
     const [location, setLocation] = useState({ latitude: data.latitude, longitude: data.longitude });
     const [address, setAddress] = useState(data.address);
     const [searchValue, setSearchValue] = useState('');
@@ -76,6 +76,7 @@ function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = (
         setSearchResult([]);
         setSearchValue('');
         onChangeLocation(latitude, longitude);
+        dispatch(actions.setDetailAddress({ address: newAddress }));
     };
     const handleClickCurrentLocation = () => {
         getCurrentLocation();
@@ -171,4 +172,4 @@ function DetailAdress({ data = {}, onCloseModal = () => {}, onChangeLocation = (
     );
 }
 
-export default DetailAdress;
+export default DetailAddress;

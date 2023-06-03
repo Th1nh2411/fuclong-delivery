@@ -27,7 +27,6 @@ function DefaultLayout({ children }) {
     const [backToTop, setBackToTop] = useState(false);
     const [showDetailChange, setShowDetailChange] = useState(false);
 
-    const [showAddressForm, setShowAddressForm] = useState(false);
     const [location, setLocation] = useState(false);
     const [address, setAddress] = useState('');
 
@@ -60,20 +59,24 @@ function DefaultLayout({ children }) {
     };
     const getCartData = async () => {
         const token = localStorageManager.getItem('token');
-        const results = await cartService.getCartItem(state.idShop, token);
-        if (results) {
-            setCartData(results);
-            const totalQuantityItem =
-                results.cart && results.cart.reduce((total, current) => current.quantityProduct + total, 0);
-            setCartQuantity(totalQuantityItem);
-        }
-        if (results.listIdProduct) {
-            setShowDetailChange(true);
+        if (token) {
+            const results = await cartService.getCartItem(state.idShop, token);
+            if (results) {
+                setCartData(results);
+                const totalQuantityItem =
+                    results.cart && results.cart.reduce((total, current) => current.quantityProduct + total, 0);
+                setCartQuantity(totalQuantityItem);
+            }
+            if (results.listIdProduct) {
+                setShowDetailChange(true);
+            }
+        } else {
+            setCartQuantity(0);
         }
     };
     useEffect(() => {
         getCartData();
-    }, [state.idShop]);
+    }, [state.idShop, state.userInfo]);
 
     const getLocation = () => {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -81,22 +84,33 @@ function DefaultLayout({ children }) {
             setLocation({ latitude, longitude });
         });
     };
+    const getUserInfoToken = () => {
+        if (localStorageManager.getItem('userInfo')) {
+            const userInfo = localStorageManager.getItem('userInfo');
+            dispatch(actions.setUserInfo(userInfo));
+        }
+    };
     const getAddress = async () => {
-        const results = await mapService.getAddress(location.latitude, location.longitude);
-        if (results) {
-            setAddress(results.display_name);
-            dispatch(actions.setDetailAddress({ address: results.display_name }));
+        if (location) {
+            const results = await mapService.getAddress(location.latitude, location.longitude);
+            if (results) {
+                setAddress(results.display_name);
+                dispatch(actions.setDetailAddress({ address: results.display_name }));
+            }
         }
     };
     const setNearestShopFromAddress = async () => {
-        const results = await shopService.getListShop(location.latitude, location.longitude);
-        if (results) {
-            dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
-            dispatch(actions.setDistance(results.listStoreNearest[0].distance));
+        if (location) {
+            const results = await shopService.getListShop(location.latitude, location.longitude);
+            if (results) {
+                dispatch(actions.setIdShop(results.listStoreNearest[0].detailShop.idShop));
+                dispatch(actions.setDistance(results.listStoreNearest[0].distance));
+            }
         }
     };
     useEffect(() => {
         getLocation();
+        getUserInfoToken();
     }, []);
     useEffect(() => {
         getAddress();
@@ -156,15 +170,15 @@ function DefaultLayout({ children }) {
             )}
             {state.showLogin && (
                 <LoginForm
-                    onCloseModal={(loginSuccess) => {
+                    onCloseModal={() => {
                         dispatch(actions.setShowLogin(false));
-                        dispatch(
-                            actions.setToast({
-                                show: loginSuccess,
-                                content: 'Đăng nhập thành công',
-                                title: 'Đăng nhập',
-                            }),
-                        );
+                        // dispatch(
+                        //     actions.setToast({
+                        //         show: loginSuccess,
+                        //         content: 'Đăng nhập thành công',
+                        //         title: 'Đăng nhập',
+                        //     }),
+                        // );
                     }}
                 />
             )}
@@ -172,7 +186,7 @@ function DefaultLayout({ children }) {
                 <div id="show-cart-btn" onClick={handleCLickShowCart} className={cx('show-cart-btn')}>
                     <HiShoppingCart />
                     <div id="num-item-cart" className={cx('num-item-cart')}>
-                        {cartQuantity}
+                        {cartQuantity || 0}
                     </div>
                 </div>
             )}

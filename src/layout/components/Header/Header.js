@@ -20,7 +20,7 @@ function Header() {
     const localStorageManager = LocalStorageManager.getInstance();
     const [state, dispatch] = useContext(StoreContext);
     const currentPath = useLocation().pathname;
-
+    const navigate = useNavigate();
     const USER_MENU = [
         {
             icon: <MdOutlineHistoryEdu />,
@@ -44,7 +44,10 @@ function Header() {
                 break;
             case 'logout':
                 localStorageManager.removeItem('token');
-                localStorageManager.getItem('token');
+                dispatch(actions.setUserInfo({}));
+                if (currentPath === config.routes.checkout) {
+                    navigate(config.routes.home);
+                }
                 break;
             default:
                 console.log('default');
@@ -72,10 +75,8 @@ function Header() {
                             />
                             <div
                                 onClick={() => {
-                                    if (currentPath === config.routes.home) {
-                                        // setShowAddressForm(true);
-                                        dispatch(actions.setDetailAddress({ show: true }));
-                                    }
+                                    // setShowAddressForm(true);
+                                    dispatch(actions.setDetailAddress({ show: true }));
                                 }}
                                 className={cx('delivery-body')}
                             >

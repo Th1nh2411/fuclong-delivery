@@ -95,10 +95,10 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
             flyingItem.style.left = `${cart.offsetLeft}px`;
             flyingItem.style.transform = 'scale(0)';
 
+            onCloseModal(true);
             setTimeout(() => {
                 flyingItem.remove();
                 storeItems();
-                onCloseModal(true);
             }, speed * 1.5);
         } else {
             dispatch(actions.setShowLogin(true));

@@ -5,6 +5,7 @@ import reducer from './reducer';
 function Provider({ children }) {
     const initState = {
         idShop: 2,
+        userInfo: {},
         distance: 0,
         showLogin: false,
         detailItem: { show: false, data: {}, editing: false },

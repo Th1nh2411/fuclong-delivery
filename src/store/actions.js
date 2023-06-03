@@ -5,8 +5,10 @@ import {
     SET_ID_SHOP,
     SET_SHOW_LOGIN,
     SET_TOAST,
+    SET_USER_INFO,
 } from './constraints';
 export const setIdShop = (payload) => ({ type: SET_ID_SHOP, payload });
+export const setUserInfo = (payload) => ({ type: SET_USER_INFO, payload });
 export const setShowLogin = (payload) => ({ type: SET_SHOW_LOGIN, payload });
 export const setDetailItem = (payload) => ({ type: SET_DETAIL_ITEM, payload });
 export const setDetailAddress = (payload) => ({ type: SET_DETAIL_ADDRESS, payload });

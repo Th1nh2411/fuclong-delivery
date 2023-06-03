@@ -19,7 +19,7 @@ const orderTypes = [
 ];
 
 function Home() {
-    const [orderType, setOrderType] = useState(0);
+    const [orderType, setOrderType] = useState(1);
     // const [showDetailItem, setShowDetailItem] = useState();
     // const [detailItem, setDetailItem] = useState(0);
     const [menu, setMenu] = useState([]);
@@ -40,9 +40,9 @@ function Home() {
                 <div className={cx('type-list')}>
                     {orderTypes.map((type, index) => (
                         <div
-                            key={index}
-                            onClick={() => setOrderType(index)}
-                            className={cx('type-item', { active: orderType === index })}
+                            key={index + 1}
+                            onClick={() => setOrderType(index + 1)}
+                            className={cx('type-item', { active: orderType === index + 1 })}
                         >
                             <div className={cx('type-img-wrapper')}>
                                 <Image src={type.img} className={cx('type-img')} />

@@ -5,12 +5,15 @@ import {
     SET_ID_SHOP,
     SET_SHOW_LOGIN,
     SET_TOAST,
+    SET_USER_INFO,
 } from './constraints';
 
 function reducer(state, action) {
     switch (action.type) {
         case SET_ID_SHOP:
             return { ...state, idShop: action.payload };
+        case SET_USER_INFO:
+            return { ...state, userInfo: action.payload };
         case SET_SHOW_LOGIN:
             return { ...state, showLogin: action.payload };
         case SET_DETAIL_ITEM:

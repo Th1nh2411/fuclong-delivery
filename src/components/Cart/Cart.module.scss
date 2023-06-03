@@ -48,8 +48,24 @@
 .body {
     flex: 1;
     max-width: 100%;
-    margin-right: 20px;
+    margin-right: 14px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    .empty-cart-wrapper {
+        margin: auto;
+        .empty-cart-img {
+            width: 300px;
+            object-fit: contain;
+        }
+        .empty-cart-title {
+            text-align: center;
+            margin-top: 40px;
+            color: #da4453;
+            font-weight: 700;
+            font-size: 2.4rem;
+        }
+    }
 }
 .footer {
     padding: 15px 25px;

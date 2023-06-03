@@ -13,25 +13,12 @@ import { StoreContext, actions } from '../../store';
 import { priceFormat } from '../../utils/format';
 import { Link } from 'react-router-dom';
 import config from '../../config';
+import Image from '../Image/Image';
+import images from '../../assets/images';
 
 const cx = classNames.bind(styles);
 
 function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
-    // const [cartData, setCartData] = useState(data);
-    // const [shippingFee, setShippingFee] = useState(15);
-    // const localStorageManager = LocalStorageManager.getInstance();
-    // const [state, dispatch] = useContext(StoreContext);
-    // const getCartItem = async () => {
-    //     const token = localStorageManager.getItem('token');
-    //     const results = await cartService.getCartItem(state.idShop, token);
-    //     if (results) {
-    //         setCartData(results);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     getCartItem();
-    // }, [state.detailItem.editing]);
     return (
         <>
             <Modal
@@ -45,26 +32,40 @@ function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
                         <HiShoppingBag className={cx('icon')} />
                         <div className={cx('title')}>
                             Giỏ hàng của bạn (
-                            {data.cart && data.cart.reduce((total, current) => current.quantityProduct + total, 0)} món)
+                            {data.cart ? data.cart.reduce((total, current) => current.quantityProduct + total, 0) : 0}{' '}
+                            món)
                         </div>
                     </div>
                     <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
                 </div>
                 <div className={cx('body')}>
-                    {data.cart &&
-                        data.cart.map((item, index) => <CartItem onDelItem={onDelItem} data={item} key={index} />)}
+                    {data.cart && data.cart.length !== 0 ? (
+                        data.cart.map((item, index) => <CartItem onDelItem={onDelItem} data={item} key={index} />)
+                    ) : (
+                        <div className={cx('empty-cart-wrapper')}>
+                            <Image src={images.emptyCart} className={cx('empty-cart-img')} />
+                            <div className={cx('empty-cart-title')}>Không có sản phẩm</div>
+                        </div>
+                    )}
                 </div>
                 <div className={cx('footer')}>
                     <div className={cx('total')}>
                         <div className={cx('total-title')}>Tổng tiền tạm tính:</div>
                         <div className={cx('total-num')}>{data.total && priceFormat(data.total)}đ</div>
                     </div>
-                    <Link onClick={() => onCloseModal()} to={config.routes.checkout} state={data}>
-                        <Button primary className={cx('checkout-btn')}>
+                    {data.cart && data.cart.length !== 0 ? (
+                        <Link onClick={() => onCloseModal()} to={config.routes.checkout} state={data}>
+                            <Button primary className={cx('checkout-btn')}>
+                                {' '}
+                                Thanh toán
+                            </Button>
+                        </Link>
+                    ) : (
+                        <Button onClick={() => onCloseModal()} primary className={cx('checkout-btn')}>
                             {' '}
-                            Thanh toán
+                            Quay lại
                         </Button>
-                    </Link>
+                    )}
                 </div>
             </Modal>
         </>

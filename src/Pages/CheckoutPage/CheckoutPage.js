@@ -1,6 +1,6 @@
 import styles from './CheckoutPage.module.scss';
 import classNames from 'classnames/bind';
-import { BsFillClipboard2Fill } from 'react-icons/bs';
+import { BsFillClipboard2Fill, BsFillPhoneFill } from 'react-icons/bs';
 import Button from '../../components/Button';
 import images from '../../assets/images';
 import { Col, Form, Row } from 'react-bootstrap';
@@ -9,7 +9,8 @@ import * as shipService from '../../services/shipService';
 import { StoreContext, actions } from '../../store';
 import { useLocation } from 'react-router';
 import { priceFormat } from '../../utils/format';
-import { FALSE } from 'sass';
+import { IoLocationSharp } from 'react-icons/io5';
+import { AiOutlineRight } from 'react-icons/ai';
 const cx = classNames.bind(styles);
 
 function CheckoutPage() {
@@ -20,13 +21,13 @@ function CheckoutPage() {
     const [state, dispatch] = useContext(StoreContext);
     const getShippingFee = async () => {
         const results = await shipService.getShippingFee(state.distance);
-        if (results.total > 15) {
+        if (results && results.total > 15) {
             setShippingFee(results.total);
         }
     };
     useEffect(() => {
         getShippingFee();
-    }, []);
+    }, [state.distance]);
     const handleCheckBoxPolicy = (e) => {
         if (e.target.checked) {
             setCheckPolicy(true);
@@ -61,6 +62,25 @@ function CheckoutPage() {
                     </div>
                     <div className={cx('delivery-wrapper')}>
                         <div className={cx('body-title')}>Giao hàng</div>
+                        <div onClick={() => dispatch(actions.setDetailAddress({ show: true }))} className={cx('info')}>
+                            <div className={cx('info-body')}>
+                                <IoLocationSharp className={cx('info-icon')} />
+                                <div className={cx('info-detail')}>{state.detailAddress.address}</div>
+                            </div>
+                            <AiOutlineRight className={cx('info-actions')} />
+                        </div>
+                        <div className={cx('info')}>
+                            <div className={cx('info-body')}>
+                                <BsFillPhoneFill className={cx('info-icon')} />
+                                <div>
+                                    <div className={cx('info-title')}>{state.userInfo.name}</div>
+                                    <div className={cx('info-detail')}>
+                                        Số điện thoại : {state.userInfo.phone || '09999999'}
+                                    </div>
+                                </div>
+                            </div>
+                            <AiOutlineRight className={cx('info-actions')} />
+                        </div>
                     </div>
                 </div>
                 <div className={cx('checkout-section')}>

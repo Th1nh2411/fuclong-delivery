@@ -1,6 +1,6 @@
 import styles from './LoginForm.module.scss';
 import classNames from 'classnames/bind';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import Modal from '../Modal/Modal';
 import Input from '../Input';
 import Button from '../Button';
@@ -8,6 +8,7 @@ import images from '../../assets/images';
 import Image from '../Image/Image';
 import * as accountService from '../../services/accountService';
 import LocalStorageManager from '../../utils/LocalStorageManager';
+import { StoreContext, actions } from '../../store';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +19,7 @@ function LoginForm({ onCloseModal = () => {} }) {
     const [loginForm, setLoginForm] = useState(true);
     const [loginStatus, setLoginStatus] = useState('');
     const localStorageManager = LocalStorageManager.getInstance();
-
+    const [state, dispatch] = useContext(StoreContext);
     const handleSubmitLogin = (e) => {
         e.preventDefault();
 
@@ -27,7 +28,16 @@ function LoginForm({ onCloseModal = () => {} }) {
             const results = await accountService.login({ phone: phoneNumber, password });
             if (results && results.isSuccess) {
                 localStorageManager.setItem('token', results.token);
-                onCloseModal(true);
+                localStorageManager.setItem('userInfo', results.customer);
+                dispatch(actions.setUserInfo(results.customer));
+                dispatch(
+                    actions.setToast({
+                        show: true,
+                        content: 'Đăng nhập thành công',
+                        title: 'Đăng nhập',
+                    }),
+                );
+                onCloseModal();
             } else if (results && results.isExist === false) {
                 setLoginStatus(results.message);
             } else {

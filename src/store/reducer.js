@@ -1,4 +1,5 @@
 import {
+    SET_CART,
     SET_DETAIL_ADDRESS,
     SET_DETAIL_ITEM,
     SET_DISTANCE,
@@ -20,6 +21,8 @@ function reducer(state, action) {
             return { ...state, detailItem: action.payload };
         case SET_DETAIL_ADDRESS:
             return { ...state, detailAddress: { ...state.detailAddress, ...action.payload } };
+        case SET_CART:
+            return { ...state, cartData: action.payload };
         case SET_TOAST:
             return { ...state, toast: action.payload };
         case SET_DISTANCE:

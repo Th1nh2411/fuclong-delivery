@@ -22,7 +22,7 @@ import DetailAddress from '../../components/DetailAddress';
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
     const [showCart, setShowCart] = useState(false);
-    const [cartData, setCartData] = useState({});
+    // const [cartData, setCartData] = useState({});
     const [cartQuantity, setCartQuantity] = useState(0);
     const [backToTop, setBackToTop] = useState(false);
     const [showDetailChange, setShowDetailChange] = useState(false);
@@ -59,10 +59,12 @@ function DefaultLayout({ children }) {
     };
     const getCartData = async () => {
         const token = localStorageManager.getItem('token');
-        if (token) {
+
+        if (token && state.userInfo) {
             const results = await cartService.getCartItem(state.idShop, token);
             if (results) {
-                setCartData(results);
+                // setCartData(results);
+                dispatch(actions.setCart(results));
                 const totalQuantityItem =
                     results.cart && results.cart.reduce((total, current) => current.quantityProduct + total, 0);
                 setCartQuantity(totalQuantityItem);
@@ -126,7 +128,7 @@ function DefaultLayout({ children }) {
                 <Footer />
             </div>
 
-            {showDetailChange && <DetailChange data={cartData} onCloseModal={() => setShowDetailChange(false)} />}
+            {showDetailChange && <DetailChange data={state.cartData} onCloseModal={() => setShowDetailChange(false)} />}
             {state.toast.show && (
                 <Toast
                     content={state.toast.content}
@@ -141,7 +143,7 @@ function DefaultLayout({ children }) {
                 </div>
             )}
             {showCart && (
-                <Cart data={cartData} onCloseModal={() => setShowCart(false)} onDelItem={() => getCartData()} />
+                <Cart data={state.cartData} onCloseModal={() => setShowCart(false)} onDelItem={() => getCartData()} />
             )}
             {state.detailItem.show && (
                 <DetailItem
@@ -172,17 +174,10 @@ function DefaultLayout({ children }) {
                 <LoginForm
                     onCloseModal={() => {
                         dispatch(actions.setShowLogin(false));
-                        // dispatch(
-                        //     actions.setToast({
-                        //         show: loginSuccess,
-                        //         content: 'Đăng nhập thành công',
-                        //         title: 'Đăng nhập',
-                        //     }),
-                        // );
                     }}
                 />
             )}
-            {currentPath !== config.routes.checkout && (
+            {currentPath !== config.routes.checkout && currentPath !== config.routes.payment && (
                 <div id="show-cart-btn" onClick={handleCLickShowCart} className={cx('show-cart-btn')}>
                     <HiShoppingCart />
                     <div id="num-item-cart" className={cx('num-item-cart')}>

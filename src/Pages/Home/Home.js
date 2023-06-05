@@ -6,7 +6,6 @@ import { Col, Row } from 'react-bootstrap';
 import Slider from '../../components/Slider/Slider';
 import OrderItem from '../../components/OrderItem/OrderItem';
 import { useContext, useEffect, useState } from 'react';
-import DetailItem from '../../components/DetailItem/DetailItem';
 import * as shopService from '../../services/shopService';
 import { StoreContext, actions } from '../../store';
 const cx = classNames.bind(styles);
@@ -20,8 +19,6 @@ const orderTypes = [
 
 function Home() {
     const [orderType, setOrderType] = useState(1);
-    // const [showDetailItem, setShowDetailItem] = useState();
-    // const [detailItem, setDetailItem] = useState(0);
     const [menu, setMenu] = useState([]);
     const [state, dispatch] = useContext(StoreContext);
     const getListItem = async () => {

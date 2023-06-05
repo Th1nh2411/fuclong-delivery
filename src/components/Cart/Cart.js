@@ -54,7 +54,7 @@ function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
                         <div className={cx('total-num')}>{data.total && priceFormat(data.total)}đ</div>
                     </div>
                     {data.cart && data.cart.length !== 0 ? (
-                        <Link onClick={() => onCloseModal()} to={config.routes.checkout} state={data}>
+                        <Link onClick={() => onCloseModal()} to={config.routes.checkout} state={{ cart: data }}>
                             <Button primary className={cx('checkout-btn')}>
                                 {' '}
                                 Thanh toán

@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './DefaultLayout.module.scss';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import Cart from '../../components/Cart/Cart';
 import { HiShoppingCart } from 'react-icons/hi';
 import { BiArrowToTop } from 'react-icons/bi';
@@ -22,8 +22,6 @@ import DetailAddress from '../../components/DetailAddress';
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
     const [showCart, setShowCart] = useState(false);
-    // const [cartData, setCartData] = useState({});
-    const [cartQuantity, setCartQuantity] = useState(0);
     const [backToTop, setBackToTop] = useState(false);
     const [showDetailChange, setShowDetailChange] = useState(false);
 
@@ -49,31 +47,17 @@ function DefaultLayout({ children }) {
         });
     };
 
-    const handleCLickShowCart = () => {
-        const token = localStorageManager.getItem('token');
-        if (token) {
-            setShowCart(true);
-        } else {
-            dispatch(actions.setShowLogin(true));
-        }
-    };
     const getCartData = async () => {
         const token = localStorageManager.getItem('token');
 
         if (token && state.userInfo) {
             const results = await cartService.getCartItem(state.idShop, token);
             if (results) {
-                // setCartData(results);
                 dispatch(actions.setCart(results));
-                const totalQuantityItem =
-                    results.cart && results.cart.reduce((total, current) => current.quantityProduct + total, 0);
-                setCartQuantity(totalQuantityItem);
             }
-            if (results.listIdProduct) {
+            if (results && results.listIdProduct) {
                 setShowDetailChange(true);
             }
-        } else {
-            setCartQuantity(0);
         }
     };
     useEffect(() => {
@@ -92,6 +76,11 @@ function DefaultLayout({ children }) {
             dispatch(actions.setUserInfo(userInfo));
         }
     };
+
+    useEffect(() => {
+        getLocation();
+        getUserInfoToken();
+    }, []);
     const getAddress = async () => {
         if (location) {
             const results = await mapService.getAddress(location.latitude, location.longitude);
@@ -111,13 +100,21 @@ function DefaultLayout({ children }) {
         }
     };
     useEffect(() => {
-        getLocation();
-        getUserInfoToken();
-    }, []);
-    useEffect(() => {
         getAddress();
         setNearestShopFromAddress();
     }, [location]);
+    const handleCLickShowCart = () => {
+        const token = localStorageManager.getItem('token');
+        if (token) {
+            setShowCart(true);
+        } else {
+            dispatch(actions.setShowLogin(true));
+        }
+    };
+    const cartQuantity = useMemo(
+        () => state.cartData && state.cartData.cart.reduce((total, current) => current.quantityProduct + total, 0),
+        [state.cartData],
+    );
     return (
         <>
             <div className={cx('wrapper')}>
@@ -133,6 +130,7 @@ function DefaultLayout({ children }) {
                 <Toast
                     content={state.toast.content}
                     title={state.toast.title}
+                    type={state.toast.type}
                     onClose={() => dispatch(actions.setToast({ show: false }))}
                 />
             )}
@@ -153,7 +151,7 @@ function DefaultLayout({ children }) {
                         if (editing) {
                             setTimeout(() => {
                                 getCartData();
-                            }, [100]);
+                            }, [1500]);
                         }
                     }}
                     editing={state.detailItem.editing}

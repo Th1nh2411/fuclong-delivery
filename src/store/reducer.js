@@ -1,5 +1,6 @@
 import {
     SET_CART,
+    SET_CURRENT_INVOICE,
     SET_DETAIL_ADDRESS,
     SET_DETAIL_ITEM,
     SET_DISTANCE,
@@ -23,6 +24,8 @@ function reducer(state, action) {
             return { ...state, detailAddress: { ...state.detailAddress, ...action.payload } };
         case SET_CART:
             return { ...state, cartData: action.payload };
+        case SET_CURRENT_INVOICE:
+            return { ...state, currentInvoice: action.payload };
         case SET_TOAST:
             return { ...state, toast: action.payload };
         case SET_DISTANCE:

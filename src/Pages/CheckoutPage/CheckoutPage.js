@@ -42,14 +42,14 @@ const payments = [
 ];
 function CheckoutPage() {
     const [checkPolicy, setCheckPolicy] = useState(false);
-    const [shippingCompany, setShippingCompany] = useState(1);
+    const [idShipping_company, setIdShippingCompany] = useState(1);
     const [payment, setPayment] = useState(1);
     const [shippingFee, setShippingFee] = useState(15);
     const [state, dispatch] = useContext(StoreContext);
     const getShippingFee = async () => {
         const results = await invoiceService.getShippingFee(state.distance);
         if (results && results.total > 15) {
-            setShippingFee(results.total);
+            setShippingFee(parseInt(results.total));
         }
     };
     useEffect(() => {
@@ -63,7 +63,6 @@ function CheckoutPage() {
             setCheckPolicy(false);
         }
     };
-    console.log(shippingCompany);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('title')}>
@@ -117,11 +116,11 @@ function CheckoutPage() {
                             <label htmlFor={'com-1'} className={cx('delivery-company-item')}>
                                 <Form.Check
                                     value={1}
-                                    checked={shippingCompany === 1}
+                                    checked={idShipping_company === 1}
                                     type="radio"
                                     isValid
                                     id={'com-1'}
-                                    onChange={(e) => setShippingCompany(Number(e.target.value))}
+                                    onChange={(e) => setIdShippingCompany(Number(e.target.value))}
                                 ></Form.Check>
                                 <label htmlFor={'com-1'}>
                                     Giao hàng{' '}
@@ -134,11 +133,11 @@ function CheckoutPage() {
                             <label htmlFor={'com-2'} className={cx('delivery-company-item')}>
                                 <Form.Check
                                     value={2}
-                                    checked={shippingCompany === 2}
+                                    checked={idShipping_company === 2}
                                     type="radio"
                                     isValid
                                     id={'com-2'}
-                                    onChange={(e) => setShippingCompany(Number(e.target.value))}
+                                    onChange={(e) => setIdShippingCompany(Number(e.target.value))}
                                 ></Form.Check>
                                 <label htmlFor={'com-2'}>
                                     Giao hàng{' '}
@@ -209,7 +208,7 @@ function CheckoutPage() {
                             state={{
                                 payment: payments.find((item) => item.id === payment),
                                 total: state.cartData.total,
-                                shippingCompany,
+                                idShipping_company,
                                 shippingFee,
                             }}
                         >

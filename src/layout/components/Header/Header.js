@@ -26,6 +26,7 @@ function Header() {
             icon: <MdOutlineHistoryEdu />,
             title: 'Lịch sử đặt hàng',
             to: config.routes.history,
+            type: 'history',
         },
 
         {
@@ -45,7 +46,7 @@ function Header() {
             case 'logout':
                 localStorageManager.removeItem('token');
                 dispatch(actions.setUserInfo({}));
-                if (currentPath === config.routes.checkout) {
+                if (currentPath !== config.routes.home) {
                     navigate(config.routes.home);
                 }
                 break;

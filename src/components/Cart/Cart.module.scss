@@ -89,6 +89,30 @@
         height: 50px;
         text-transform: uppercase;
     }
+    .warning-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #de1212;
+    }
+    .warning-title {
+        display: flex;
+        margin-right: 20px;
+        align-items: center;
+        font-weight: 600;
+        .warning-icon {
+            margin-left: 3px;
+        }
+    }
+    .warning-actions {
+        font-weight: 700;
+        color: var(--primary-color);
+        transition: all 0.1s ease-in-out;
+        &:hover {
+            cursor: pointer;
+            color: #222;
+        }
+    }
 }
 
 // Cart Item

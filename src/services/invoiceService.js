@@ -54,6 +54,31 @@ export const getCurrentInvoice = async (token) => {
         return error.response && error.response.data;
     }
 };
+export const cancelCurrentInvoice = async (token) => {
+    const config = {
+        headers: { access_token: token },
+    };
+    try {
+        const res = await httpRequest.del(`order/cancelInvoice`, config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};
+export const getAllInvoice = async (token) => {
+    const config = {
+        headers: { access_token: token },
+    };
+    try {
+        const res = await httpRequest.get(`order/getAllInvoice`, config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};
+
 export const getDetailInvoice = async (idInvoice, token) => {
     const config = {
         headers: { access_token: token },

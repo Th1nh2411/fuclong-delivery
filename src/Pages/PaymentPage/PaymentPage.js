@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import { IoLocationSharp } from 'react-icons/io5';
 import { AiOutlineRight } from 'react-icons/ai';
 import { BsFillPhoneFill } from 'react-icons/bs';
+import { RiRefund2Line } from 'react-icons/ri';
 const cx = classNames.bind(styles);
 
 function CheckoutPage() {
@@ -165,23 +166,44 @@ function CheckoutPage() {
                         </div>
                     </div>
                     <div className={cx('qr-scan-wrapper')}>
-                        <div className={cx('qr-scan-title')}>Quét mã QR để thanh toán</div>
+                        {state.currentInvoice.invoice.status === 0 ? (
+                            <>
+                                <div className={cx('qr-scan-title')}>Quét mã QR để thanh toán</div>
 
-                        <div className={cx('qr-img-wrapper')}>
-                            <Image src={payment.qrCode} className={cx('qr-img')} />
-                        </div>
-                        <div className={cx('qr-scan-subtitle')}>
-                            <QRIcon className={cx('icon')} />
-                            Sử dụng <b>App {payment.name}</b> hoặc ứng dụng camera hỗ trợ QR code để quét mã
-                        </div>
-                        <div className={cx('actions-wrapper')}>
-                            <div onClick={() => setShowConfirmCancelInvoice(true)} className={cx('actions-back')}>
-                                Hủy đơn
-                            </div>
-                            <div onClick={() => confirmPaymentInvoice()} className={cx('actions-paid')}>
-                                Đã thanh toán?
-                            </div>
-                        </div>
+                                <div className={cx('qr-img-wrapper')}>
+                                    <Image src={payment.qrCode} className={cx('qr-img')} />
+                                </div>
+                                <div className={cx('qr-scan-subtitle')}>
+                                    <QRIcon className={cx('icon')} />
+                                    Sử dụng <b>App {payment.name}</b> hoặc ứng dụng camera hỗ trợ QR code để quét mã
+                                </div>
+                                <div className={cx('actions-wrapper')}>
+                                    <div
+                                        onClick={() => setShowConfirmCancelInvoice(true)}
+                                        className={cx('actions-back')}
+                                    >
+                                        Hủy đơn
+                                    </div>
+                                    <div onClick={() => confirmPaymentInvoice()} className={cx('actions-paid')}>
+                                        Đã thanh toán?
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className={cx('qr-scan-title')}>Đơn hàng đang được giao</div>
+                                <Image
+                                    src={
+                                        'https://order.phuclong.com.vn/_next/static/images/delivery-686d7142750173aa8bc5f1d11ea195e4.png'
+                                    }
+                                    className={cx('qr-img')}
+                                />
+                                <div className={cx('qr-scan-subtitle')}>
+                                    <RiRefund2Line className={cx('icon')} />
+                                    Liên hệ hotline <b>099669966</b> để có thể hủy đơn hàng đang giao
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

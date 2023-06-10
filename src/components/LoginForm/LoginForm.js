@@ -37,6 +37,7 @@ function LoginForm({ onCloseModal = () => {} }) {
                         title: 'Đăng nhập',
                     }),
                 );
+                const getNewInvoice = state.getCurrentInvoice();
                 onCloseModal();
             } else if (results && results.isExist === false) {
                 setLoginStatus(results.message);

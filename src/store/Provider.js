@@ -31,7 +31,8 @@ function Provider({ children }) {
     const [state, dispatch] = useReducer(reducer, initState);
     useEffect(() => {
         getCurrentInvoice();
-    }, [state.userInfo]);
+    }, []);
+    console.log(state.currentInvoice);
     return <UserContext.Provider value={[state, dispatch]}>{children}</UserContext.Provider>;
 }
 

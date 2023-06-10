@@ -20,7 +20,7 @@ const cx = classNames.bind(styles);
 
 function HistoryPage() {
     const [listInvoice, setListInvoice] = useState();
-    const [showDetailInvoice, setShowDetailInvoice] = useState();
+    const [detailInvoice, setDetailInvoice] = useState();
     const localStorageManager = LocalStorageManager.getInstance();
     const getListInvoice = async () => {
         const token = localStorageManager.getItem('token');
@@ -43,12 +43,12 @@ function HistoryPage() {
             return null;
         }
     }, [listInvoice]);
-    const handleShowDetailInvoice = () => {
-        setShowDetailInvoice(true);
+    const handleShowDetailInvoice = (id) => {
+        setDetailInvoice(id);
     };
     return (
         <>
-            {showDetailInvoice && <DetailInvoice onCloseModal={() => setShowDetailInvoice(false)} />}
+            {detailInvoice && <DetailInvoice idInvoice={detailInvoice} onCloseModal={() => setDetailInvoice(false)} />}
             <div className={cx('wrapper')}>
                 <div className={cx('title')}>
                     <BsFillClipboard2Fill className={cx('title-icon')} /> Lịch sử đặt hàng
@@ -87,7 +87,10 @@ function HistoryPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div onClick={handleShowDetailInvoice} className={cx('invoice-actions')}>
+                            <div
+                                onClick={() => handleShowDetailInvoice(currentInvoice.idInvoice)}
+                                className={cx('invoice-actions')}
+                            >
                                 Xem chi tiết
                             </div>
                         </div>
@@ -118,7 +121,10 @@ function HistoryPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div onClick={handleShowDetailInvoice} className={cx('invoice-actions')}>
+                                <div
+                                    onClick={() => handleShowDetailInvoice(item.idInvoice)}
+                                    className={cx('invoice-actions')}
+                                >
                                     Xem chi tiết
                                 </div>
                             </div>

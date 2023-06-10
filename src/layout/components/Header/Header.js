@@ -45,7 +45,9 @@ function Header() {
                 break;
             case 'logout':
                 localStorageManager.removeItem('token');
+                localStorageManager.removeItem('userInfo');
                 dispatch(actions.setUserInfo({}));
+                dispatch(actions.setCurrentInvoice({}));
                 if (currentPath !== config.routes.home) {
                     navigate(config.routes.home);
                 }

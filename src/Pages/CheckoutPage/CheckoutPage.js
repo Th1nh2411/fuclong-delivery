@@ -210,6 +210,7 @@ function CheckoutPage() {
                                 total: state.cartData.total,
                                 idShipping_company,
                                 shippingFee,
+                                cartInvoice: state.cartData.cart,
                             }}
                         >
                             <Button className={cx('checkout-btn')} disable={!checkPolicy} primary>

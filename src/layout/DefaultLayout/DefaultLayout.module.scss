@@ -3,7 +3,9 @@
     position: relative;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     z-index: 0;
+    min-height: 100vh;
 }
 
 .container {
@@ -70,15 +72,7 @@
         animation: shakeUp 0.3s forwards ease-in-out;
     }
 }
-@media (max-width: 991.98px) {
-    .content {
-        margin-left: 0;
-        padding: 0;
-    }
-    .sidebar {
-        display: none;
-    }
-}
+
 @keyframes shakeUp {
     0% {
         opacity: 0;

@@ -18,6 +18,87 @@
     display: flex;
     justify-content: center;
 }
+.body-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    border-bottom: 3px solid var(--primary-color);
+    margin-bottom: 15px;
+    width: max-content;
+}
+.delivery-section {
+    margin-right: 20px;
+    flex: 1;
+    padding: 20px 24px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    .cart-list-wrapper {
+        .cart-list {
+            max-height: 160px;
+            overflow-y: auto;
+            background-color: #f4f4f4;
+            padding: 5px 0px;
+        }
+        .cart-item {
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+    .delivery-wrapper {
+        margin-top: 20px;
+        .info {
+            padding: 12px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .info-body {
+                display: flex;
+                align-items: center;
+            }
+
+            .info-icon {
+                font-size: 3rem;
+                color: var(--primary-color);
+                flex-shrink: 0;
+                margin-right: 10px;
+            }
+            .info-title {
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+            .info-detail {
+                font-size: 1.4rem;
+            }
+        }
+        .info-actions {
+            flex-shrink: 0;
+            margin-left: 15px;
+            color: var(--primary-color);
+            &:hover {
+                opacity: 0.8;
+                cursor: pointer;
+            }
+        }
+
+        .delivery-company-img {
+            margin-left: 1px;
+            width: 40px;
+            height: 18px;
+            object-fit: cover;
+        }
+        .delivery-subtitle {
+            padding: 5px 10px;
+            span {
+                margin-left: 5px;
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+        }
+    }
+}
 .qr-scan-wrapper {
     border-radius: 10px;
     background-color: var(--primary-color);

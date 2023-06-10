@@ -14,6 +14,9 @@ import { StoreContext, actions } from '../../store';
 import LocalStorageManager from '../../utils/LocalStorageManager';
 import config from '../../config';
 import dayjs from 'dayjs';
+import { IoLocationSharp } from 'react-icons/io5';
+import { AiOutlineRight } from 'react-icons/ai';
+import { BsFillPhoneFill } from 'react-icons/bs';
 const cx = classNames.bind(styles);
 
 function CheckoutPage() {
@@ -29,6 +32,7 @@ function CheckoutPage() {
         idShipping_company,
         shippingFee,
         date,
+        cartInvoice,
     } = location.state;
     const [state, dispatch] = useContext(StoreContext);
     const [idInvoice, setIdInvoice] = useState();
@@ -87,10 +91,82 @@ function CheckoutPage() {
                     <Image src={payment.logo} className={cx('title-icon')} /> Cổng thanh toán {payment.name}
                 </div>
                 <div className={cx('body')}>
+                    <div className={cx('delivery-section')}>
+                        <div className={cx('cart-list-wrapper')}>
+                            <div className={cx('body-title')}>Các món đã chọn</div>
+                            <div className={cx('cart-list')}>
+                                {cartInvoice &&
+                                    cartInvoice.map((item, index) => (
+                                        <div key={index} className={cx('cart-item')}>
+                                            <div>
+                                                <div className={cx('item-name')}>
+                                                    {item.name}({item.size ? 'L' : 'M'}) x{item.quantityProduct}
+                                                </div>
+                                                <div className={cx('item-topping')}>
+                                                    {item.listTopping.map((item) => item.name).join(', ')}
+                                                </div>
+                                            </div>
+                                            {item.totalProducts && (
+                                                <div className={cx('item-price')}>
+                                                    {priceFormat(item.totalProducts)}đ
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
+                        <div className={cx('delivery-wrapper')}>
+                            <div className={cx('body-title')}>
+                                Giao hàng{' '}
+                                {idShipping_company === 1 ? (
+                                    <Image
+                                        src={'https://thicao.com/wp-content/uploads/2019/07/logo-moi-cua-grab.jpg'}
+                                        className={cx('delivery-company-img')}
+                                    />
+                                ) : (
+                                    <Image
+                                        src={
+                                            'https://images.squarespace-cdn.com/content/v1/5f9bdbe0209d9a7ee6ea8797/1612706541953-M447AAUK2JK58U0K8B4N/now+food+logo.jpeg'
+                                        }
+                                        className={cx('delivery-company-img')}
+                                    />
+                                )}
+                            </div>
+                            <div
+                                onClick={() => dispatch(actions.setDetailAddress({ show: true }))}
+                                className={cx('info')}
+                            >
+                                <div className={cx('info-body')}>
+                                    <IoLocationSharp className={cx('info-icon')} />
+                                    <div className={cx('info-detail')}>{state.detailAddress.address}</div>
+                                </div>
+                                <AiOutlineRight className={cx('info-actions')} />
+                            </div>
+                            <div className={cx('info')}>
+                                <div className={cx('info-body')}>
+                                    <BsFillPhoneFill className={cx('info-icon')} />
+                                    {state.userInfo && (
+                                        <div>
+                                            <div className={cx('info-title')}>{state.userInfo.name}</div>
+                                            <div className={cx('info-detail')}>
+                                                Số điện thoại : {state.userInfo.phone || '09999999'}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <AiOutlineRight className={cx('info-actions')} />
+                            </div>
+                            <div className={cx('delivery-subtitle')}>
+                                Thời gian đặt đơn : <span>{orderTime}</span>
+                            </div>
+                            <div className={cx('delivery-subtitle')}>
+                                Số tiền : <span>{priceFormat(total + shippingFee)}đ</span>
+                            </div>
+                        </div>
+                    </div>
                     <div className={cx('qr-scan-wrapper')}>
                         <div className={cx('qr-scan-title')}>Quét mã QR để thanh toán</div>
-                        <div className={cx('qr-scan-subtitle')}>Số tiền : {priceFormat(total + shippingFee)}đ</div>
-                        <div className={cx('qr-scan-subtitle')}>Thời gian đặt đơn : {orderTime}</div>
+
                         <div className={cx('qr-img-wrapper')}>
                             <Image src={payment.qrCode} className={cx('qr-img')} />
                         </div>

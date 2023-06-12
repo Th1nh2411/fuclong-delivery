@@ -34,7 +34,7 @@ function Provider({ children }) {
         getCurrentInvoice();
     }, []);
     useEffect(() => {
-        if (state.currentInvoice.invoice && state.currentInvoice.invoice.status === 1) {
+        if (state.currentInvoice.invoice && state.currentInvoice.invoice.status !== 0) {
             var getCurrentInvoiceInterval = setInterval(() => {
                 getCurrentInvoice();
             }, 10000);

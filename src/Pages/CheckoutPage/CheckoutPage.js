@@ -67,22 +67,12 @@ function CheckoutPage() {
         }
     };
     const handleClickCheckout = async () => {
-        // dispatch(
-        //     actions.setCurrentInvoice({
-        //         invoice: {
-        //             payment: payments.find((item) => item.id === payment),
-        //             total: state.cartData.total,
-        //             idShipping_company,
-        //             shippingFee,
-        //         },
-        //         cart: state.cartData.cart,
-        //     }),
-        // );
         const token = localStorageManager.getItem('token');
         if (token) {
             const results = await invoiceService.createInvoice(idShipping_company, shippingFee, state.idShop, token);
             if (results.isSuccess) {
                 dispatch(actions.setCart(false));
+                dispatch(actions.setCurrentInvoice({ cart: [] }));
                 const getNewInvoice = state.getCurrentInvoice();
             }
         }

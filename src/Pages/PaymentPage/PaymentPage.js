@@ -30,33 +30,16 @@ function CheckoutPage() {
     };
 
     const [state, dispatch] = useContext(StoreContext);
-    // const [idInvoice, setIdInvoice] = useState();
     const [showConfirmCancelInvoice, setShowConfirmCancelInvoice] = useState();
     const localStorageManager = LocalStorageManager.getInstance();
     const navigate = useNavigate();
 
     const { invoice, cart } = state.currentInvoice;
-    // const createInvoice = async () => {
-    //     const token = localStorageManager.getItem('token');
-    //     if (token) {
-    //         const results = await invoiceService.createInvoice(
-    //             invoice.idShipping_company,
-    //             invoice.shippingFee,
-    //             state.idShop,
-    //             token,
-    //         );
-    //         setIdInvoice(results.idInvoice);
-    //         if (results.isSuccess) {
-    //             dispatch(actions.setCart(false));
-    //             const getNewInvoice = state.getCurrentInvoice();
-    //         }
-    //     }
-    // };
+
     const confirmPaymentInvoice = async () => {
         const token = localStorageManager.getItem('token');
         if (token) {
             const results = await invoiceService.confirmInvoice(invoice.idInvoice, invoice.total, token);
-            // setIdInvoice(results.idInvoice);
         }
         dispatch(actions.setToast({ show: true, title: 'Đặt hàng', content: 'Đặt hàng thành công' }));
         const getNewInvoice = state.getCurrentInvoice();
@@ -64,9 +47,9 @@ function CheckoutPage() {
     };
 
     useEffect(() => {
-        if (cart && cart.length === 0) {
-            navigate(config.routes.home);
+        if (!cart) {
             dispatch(actions.setToast({ show: true, title: 'Giao hàng', content: 'Giao hàng thành công' }));
+            navigate(config.routes.home);
         }
     }, [cart]);
     const handleCancelInvoice = async () => {

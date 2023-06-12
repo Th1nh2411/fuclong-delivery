@@ -22,58 +22,66 @@ const cx = classNames.bind(styles);
 
 function CheckoutPage() {
     const location = useLocation();
-    const {
-        payment = {
-            id: 1,
-            name: 'MoMo',
-            logo: 'https://minio.thecoffeehouse.com/image/tchmobileapp/386_ic_momo@3x.png',
-            qrCode: 'https://static.mservice.io/blogscontents/momo-upload-api-211217174745-637753600658721515.png',
-        },
-        total,
-        idShipping_company,
-        shippingFee,
-        date,
-        cartInvoice,
-    } = location.state;
+    const payment = {
+        id: 1,
+        name: 'MoMo',
+        logo: 'https://minio.thecoffeehouse.com/image/tchmobileapp/386_ic_momo@3x.png',
+        qrCode: 'https://static.mservice.io/blogscontents/momo-upload-api-211217174745-637753600658721515.png',
+    };
+
     const [state, dispatch] = useContext(StoreContext);
-    const [idInvoice, setIdInvoice] = useState();
+    // const [idInvoice, setIdInvoice] = useState();
     const [showConfirmCancelInvoice, setShowConfirmCancelInvoice] = useState();
     const localStorageManager = LocalStorageManager.getInstance();
     const navigate = useNavigate();
-    const createInvoice = async () => {
-        const token = localStorageManager.getItem('token');
-        if (token) {
-            const results = await invoiceService.createInvoice(idShipping_company, shippingFee, state.idShop, token);
-            setIdInvoice(results.idInvoice);
-            if (results.isSuccess) {
-                dispatch(actions.setCart(false));
-                // console.log(state.getCurrentInvoice());
-                const getNewInvoice = state.getCurrentInvoice();
-            }
-        }
-    };
-    console.log(state.currentInvoice);
+
+    const { invoice, cart } = state.currentInvoice;
+    // const createInvoice = async () => {
+    //     const token = localStorageManager.getItem('token');
+    //     if (token) {
+    //         const results = await invoiceService.createInvoice(
+    //             invoice.idShipping_company,
+    //             invoice.shippingFee,
+    //             state.idShop,
+    //             token,
+    //         );
+    //         setIdInvoice(results.idInvoice);
+    //         if (results.isSuccess) {
+    //             dispatch(actions.setCart(false));
+    //             const getNewInvoice = state.getCurrentInvoice();
+    //         }
+    //     }
+    // };
     const confirmPaymentInvoice = async () => {
         const token = localStorageManager.getItem('token');
         if (token) {
-            const results = await invoiceService.confirmInvoice(idInvoice, total, token);
-            setIdInvoice(results.idInvoice);
+            const results = await invoiceService.confirmInvoice(invoice.idInvoice, invoice.total, token);
+            // setIdInvoice(results.idInvoice);
         }
+        dispatch(actions.setToast({ show: true, title: 'Đặt hàng', content: 'Đặt hàng thành công' }));
+        const getNewInvoice = state.getCurrentInvoice();
+        navigate(config.routes.home);
     };
 
     useEffect(() => {
-        createInvoice();
-    }, []);
+        if (cart && cart.length === 0) {
+            navigate(config.routes.home);
+            dispatch(actions.setToast({ show: true, title: 'Giao hàng', content: 'Giao hàng thành công' }));
+        }
+    }, [cart]);
     const handleCancelInvoice = async () => {
         const token = localStorageManager.getItem('token');
         if (token) {
             const results = await invoiceService.cancelCurrentInvoice(token);
         }
         dispatch(actions.setToast({ show: true, title: 'Hủy đơn', content: 'Hủy đơn thành công' }));
-        dispatch(actions.setCurrentInvoice(null));
+        dispatch(actions.setCurrentInvoice({ invoice: null }));
         navigate(config.routes.home);
     };
-    const orderTime = useMemo(() => (date ? dayjs(date).format('HH:mm DD/MM/YYYY') : 'Vừa lên đơn'), []);
+    const orderTime = useMemo(
+        () => (invoice && invoice.date ? dayjs(invoice.date).format('HH:mm DD/MM/YYYY') : 'Vừa lên đơn'),
+        [],
+    );
     return (
         <>
             {showConfirmCancelInvoice && (
@@ -96,8 +104,8 @@ function CheckoutPage() {
                         <div className={cx('cart-list-wrapper')}>
                             <div className={cx('body-title')}>Các món đã chọn</div>
                             <div className={cx('cart-list')}>
-                                {cartInvoice &&
-                                    cartInvoice.map((item, index) => (
+                                {cart &&
+                                    cart.map((item, index) => (
                                         <div key={index} className={cx('cart-item')}>
                                             <div>
                                                 <div className={cx('item-name')}>
@@ -107,10 +115,8 @@ function CheckoutPage() {
                                                     {item.listTopping.map((item) => item.name).join(', ')}
                                                 </div>
                                             </div>
-                                            {item.totalProducts && (
-                                                <div className={cx('item-price')}>
-                                                    {priceFormat(item.totalProducts)}đ
-                                                </div>
+                                            {item.total && (
+                                                <div className={cx('item-price')}>{priceFormat(item.total)}đ</div>
                                             )}
                                         </div>
                                     ))}
@@ -119,7 +125,7 @@ function CheckoutPage() {
                         <div className={cx('delivery-wrapper')}>
                             <div className={cx('body-title')}>
                                 Giao hàng{' '}
-                                {idShipping_company === 1 ? (
+                                {invoice && invoice.idShipping_company === 1 ? (
                                     <Image
                                         src={'https://thicao.com/wp-content/uploads/2019/07/logo-moi-cua-grab.jpg'}
                                         className={cx('delivery-company-img')}
@@ -161,12 +167,15 @@ function CheckoutPage() {
                                 Thời gian đặt đơn : <span>{orderTime}</span>
                             </div>
                             <div className={cx('delivery-subtitle')}>
-                                Số tiền : <span>{priceFormat(total + shippingFee)}đ</span>
+                                Phí giao hàng : <span>{invoice && priceFormat(invoice.shippingFee)}đ</span>
+                            </div>
+                            <div className={cx('delivery-subtitle')}>
+                                Tổng cộng : <span>{invoice && priceFormat(invoice.total + invoice.shippingFee)}đ</span>
                             </div>
                         </div>
                     </div>
                     <div className={cx('qr-scan-wrapper')}>
-                        {state.currentInvoice.invoice.status === 0 ? (
+                        {invoice && invoice.status === 0 ? (
                             <>
                                 <div className={cx('qr-scan-title')}>Quét mã QR để thanh toán</div>
 

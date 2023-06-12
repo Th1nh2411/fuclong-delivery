@@ -74,6 +74,16 @@ function DetailInvoice({ idInvoice, onCloseModal = () => {} }) {
                             </span>
                         </div>
                         <div className={cx('info')}>
+                            Trạng thái :{' '}
+                            <span>
+                                {invoiceInfo.status === 0
+                                    ? 'Chưa thanh toán'
+                                    : invoiceInfo.status === 1
+                                    ? 'Đang giao'
+                                    : 'Đã giao'}
+                            </span>
+                        </div>
+                        <div className={cx('info')}>
                             Tổng tiền các món : <span>{priceFormat(invoiceInfo.total)}đ</span>
                         </div>
                         <div className={cx('info')}>

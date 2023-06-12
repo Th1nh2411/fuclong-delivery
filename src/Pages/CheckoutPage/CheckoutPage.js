@@ -10,8 +10,9 @@ import { priceFormat } from '../../utils/format';
 import { IoLocationSharp } from 'react-icons/io5';
 import { AiOutlineRight } from 'react-icons/ai';
 import Image from '../../components/Image/Image';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import config from '../../config';
+import LocalStorageManager from '../../utils/LocalStorageManager';
 const cx = classNames.bind(styles);
 
 const payments = [
@@ -46,6 +47,8 @@ function CheckoutPage() {
     const [payment, setPayment] = useState(1);
     const [shippingFee, setShippingFee] = useState(15);
     const [state, dispatch] = useContext(StoreContext);
+    const localStorageManager = LocalStorageManager.getInstance();
+    const navigate = useNavigate();
     const getShippingFee = async () => {
         const results = await invoiceService.getShippingFee(state.distance);
         if (results && results.total > 15) {
@@ -62,6 +65,28 @@ function CheckoutPage() {
         } else {
             setCheckPolicy(false);
         }
+    };
+    const handleClickCheckout = async () => {
+        // dispatch(
+        //     actions.setCurrentInvoice({
+        //         invoice: {
+        //             payment: payments.find((item) => item.id === payment),
+        //             total: state.cartData.total,
+        //             idShipping_company,
+        //             shippingFee,
+        //         },
+        //         cart: state.cartData.cart,
+        //     }),
+        // );
+        const token = localStorageManager.getItem('token');
+        if (token) {
+            const results = await invoiceService.createInvoice(idShipping_company, shippingFee, state.idShop, token);
+            if (results.isSuccess) {
+                dispatch(actions.setCart(false));
+                const getNewInvoice = state.getCurrentInvoice();
+            }
+        }
+        navigate(config.routes.payment);
     };
     return (
         <div className={cx('wrapper')}>
@@ -203,20 +228,14 @@ function CheckoutPage() {
                                 <span>điều khoản, điều kiện và chính sách</span> liên quan
                             </div>
                         </div>
-                        <Link
-                            to={config.routes.payment}
-                            state={{
-                                payment: payments.find((item) => item.id === payment),
-                                total: state.cartData.total,
-                                idShipping_company,
-                                shippingFee,
-                                cartInvoice: state.cartData.cart,
-                            }}
+                        <Button
+                            onClick={handleClickCheckout}
+                            className={cx('checkout-btn')}
+                            disable={!checkPolicy}
+                            primary
                         >
-                            <Button className={cx('checkout-btn')} disable={!checkPolicy} primary>
-                                Tiến hành thanh toán
-                            </Button>
-                        </Link>
+                            Tiến hành thanh toán
+                        </Button>
                     </div>
                 </div>
             </div>

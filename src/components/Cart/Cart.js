@@ -63,14 +63,16 @@ function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
                     )}
                 </div>
                 <div className={cx('footer')}>
-                    {state.currentInvoice ? (
+                    {state.currentInvoice && state.currentInvoice.invoice ? (
                         <div className={cx('warning-wrapper')}>
                             <div className={cx('warning-title')}>
-                                Bạn có hóa đơn chưa thanh toán
+                                {state.currentInvoice.invoice.status
+                                    ? 'Bạn có đơn hàng đang giao'
+                                    : 'Bạn có đơn hàng chưa thanh toán'}
                                 <RiFileWarningLine className={cx('warning-icon')} />
                             </div>
                             <div onClick={handleCheckoutOldInvoice} className={cx('warning-actions')}>
-                                Thanh toán
+                                Chi tiết
                             </div>
                         </div>
                     ) : (
@@ -82,7 +84,7 @@ function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
                     {data.cart && data.cart.length !== 0 ? (
                         <Button
                             onClick={handleClickCheckout}
-                            disable={!!state.currentInvoice}
+                            disable={!!state.currentInvoice.invoice}
                             primary
                             className={cx('checkout-btn')}
                         >

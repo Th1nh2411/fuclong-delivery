@@ -19,8 +19,9 @@ import DetailInvoice from '../../components/DetailInvoice/DetailInvoice';
 const cx = classNames.bind(styles);
 
 function HistoryPage() {
-    const [listInvoice, setListInvoice] = useState();
+    const [listInvoice, setListInvoice] = useState([]);
     const [detailInvoice, setDetailInvoice] = useState();
+    const [state, dispatch] = useContext(StoreContext);
     const localStorageManager = LocalStorageManager.getInstance();
     const getListInvoice = async () => {
         const token = localStorageManager.getItem('token');
@@ -33,9 +34,9 @@ function HistoryPage() {
     };
     useEffect(() => {
         getListInvoice();
-    }, []);
+    }, [state.currentInvoice.invoice]);
     const currentInvoice = useMemo(() => {
-        if (listInvoice) {
+        if (listInvoice.length !== 0) {
             if (listInvoice[listInvoice.length - 1].status === 0 || listInvoice[listInvoice.length - 1].status === 1) {
                 return listInvoice[listInvoice.length - 1];
             }
@@ -96,39 +97,71 @@ function HistoryPage() {
                         </div>
                     )}
 
-                    {listInvoice &&
-                        listInvoice.slice(0, -1).map((item, index) => (
-                            <div key={index} className={cx('invoice-wrapper')}>
-                                <div className={cx('left-side')}>
-                                    <BillIcon className={cx('invoice-img')} />
-                                    <div className={cx('invoice-body')}>
-                                        <div className={cx('invoice-title')}>
-                                            Đơn hàng đặt lúc {dayjs(item.date).format('HH:mm')} ngày{' '}
-                                            {dayjs(item.date).format('DD/MM/YYYY')}
-                                        </div>
-                                        <div className={cx('invoice-info')}>
-                                            Trạng thái :{' '}
-                                            <span>
-                                                {item.status === 0
-                                                    ? 'Chưa thanh toán'
-                                                    : item.status === 1
-                                                    ? 'Đang giao'
-                                                    : 'Đã giao'}
-                                            </span>
-                                        </div>
-                                        <div className={cx('invoice-info')}>
-                                            Tổng tiền : <span>{priceFormat(item.shippingFee + item.total)}đ</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    onClick={() => handleShowDetailInvoice(item.idInvoice)}
-                                    className={cx('invoice-actions')}
-                                >
-                                    Xem chi tiết
-                                </div>
-                            </div>
-                        ))}
+                    {currentInvoice
+                        ? listInvoice.slice(0, -1).map((item, index) => (
+                              <div key={index} className={cx('invoice-wrapper')}>
+                                  <div className={cx('left-side')}>
+                                      <BillIcon className={cx('invoice-img')} />
+                                      <div className={cx('invoice-body')}>
+                                          <div className={cx('invoice-title')}>
+                                              Đơn hàng đặt lúc {dayjs(item.date).format('HH:mm')} ngày{' '}
+                                              {dayjs(item.date).format('DD/MM/YYYY')}
+                                          </div>
+                                          <div className={cx('invoice-info')}>
+                                              Trạng thái :{' '}
+                                              <span>
+                                                  {item.status === 0
+                                                      ? 'Chưa thanh toán'
+                                                      : item.status === 1
+                                                      ? 'Đang giao'
+                                                      : 'Đã giao'}
+                                              </span>
+                                          </div>
+                                          <div className={cx('invoice-info')}>
+                                              Tổng tiền : <span>{priceFormat(item.shippingFee + item.total)}đ</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div
+                                      onClick={() => handleShowDetailInvoice(item.idInvoice)}
+                                      className={cx('invoice-actions')}
+                                  >
+                                      Xem chi tiết
+                                  </div>
+                              </div>
+                          ))
+                        : listInvoice.map((item, index) => (
+                              <div key={index} className={cx('invoice-wrapper')}>
+                                  <div className={cx('left-side')}>
+                                      <BillIcon className={cx('invoice-img')} />
+                                      <div className={cx('invoice-body')}>
+                                          <div className={cx('invoice-title')}>
+                                              Đơn hàng đặt lúc {dayjs(item.date).format('HH:mm')} ngày{' '}
+                                              {dayjs(item.date).format('DD/MM/YYYY')}
+                                          </div>
+                                          <div className={cx('invoice-info')}>
+                                              Trạng thái :{' '}
+                                              <span>
+                                                  {item.status === 0
+                                                      ? 'Chưa thanh toán'
+                                                      : item.status === 1
+                                                      ? 'Đang giao'
+                                                      : 'Đã giao'}
+                                              </span>
+                                          </div>
+                                          <div className={cx('invoice-info')}>
+                                              Tổng tiền : <span>{priceFormat(item.shippingFee + item.total)}đ</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div
+                                      onClick={() => handleShowDetailInvoice(item.idInvoice)}
+                                      className={cx('invoice-actions')}
+                                  >
+                                      Xem chi tiết
+                                  </div>
+                              </div>
+                          ))}
                 </div>
             </div>
         </>

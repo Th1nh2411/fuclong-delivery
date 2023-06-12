@@ -24,14 +24,25 @@ function Provider({ children }) {
         detailItem: { show: false, data: null, editing: false },
         detailAddress: { show: false, address: '' },
         cartData: null,
-        currentInvoice: null,
+        currentInvoice: { invoice: null },
         toast: { show: false, content: '', title: '' },
         getCurrentInvoice,
     };
     const [state, dispatch] = useReducer(reducer, initState);
+
     useEffect(() => {
         getCurrentInvoice();
     }, []);
+    useEffect(() => {
+        if (state.currentInvoice.invoice && state.currentInvoice.invoice.status === 1) {
+            var getCurrentInvoiceInterval = setInterval(() => {
+                getCurrentInvoice();
+            }, 10000);
+        } else {
+            clearInterval(getCurrentInvoiceInterval);
+        }
+        return () => clearInterval(getCurrentInvoiceInterval);
+    }, [state.currentInvoice.invoice]);
     console.log(state.currentInvoice);
     return <UserContext.Provider value={[state, dispatch]}>{children}</UserContext.Provider>;
 }

@@ -53,7 +53,7 @@ function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
                     <AiOutlineClose onClick={onCloseModal} className={cx('close-icon')} />
                 </div>
                 <div className={cx('body')}>
-                    {data.cart && data.cart.length !== 0 ? (
+                    {data && data.cart && data.cart.length !== 0 ? (
                         data.cart.map((item, index) => <CartItem onDelItem={onDelItem} data={item} key={index} />)
                     ) : (
                         <div className={cx('empty-cart-wrapper')}>
@@ -78,10 +78,10 @@ function Cart({ data = {}, onCloseModal = () => {}, onDelItem = () => {} }) {
                     ) : (
                         <div className={cx('total')}>
                             <div className={cx('total-title')}>Tổng tiền tạm tính:</div>
-                            <div className={cx('total-num')}>{data.total && priceFormat(data.total)}đ</div>
+                            <div className={cx('total-num')}>{data && priceFormat(data.total)}đ</div>
                         </div>
                     )}
-                    {data.cart && data.cart.length !== 0 ? (
+                    {data && data.cart.length !== 0 ? (
                         <Button
                             onClick={handleClickCheckout}
                             disable={!!state.currentInvoice.invoice}

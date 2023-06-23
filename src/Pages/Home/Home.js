@@ -20,12 +20,15 @@ const orderTypes = [
 function Home() {
     const [orderType, setOrderType] = useState(1);
     const [menu, setMenu] = useState([]);
+    const [loading, setLoading] = useState();
     const [state, dispatch] = useContext(StoreContext);
     const getListItem = async () => {
+        setLoading(true);
         const results = await shopService.getItemFromShop(state.idShop, orderType);
         if (results) {
             setMenu(results.menu);
         }
+        setLoading(false);
     };
     useEffect(() => {
         getListItem();
@@ -53,19 +56,26 @@ function Home() {
                     không ngừng cùng niềm đam mê. Và chính kết nối dựa trên niềm tin, sự trung thực và tin yêu sẽ góp
                     phần mang đến những nét đẹp trong văn hóa thưởng trà và cà phê ngày càng bay cao, vươn xa.
                 </div>
-                <Row className={cx('order-list')}>
-                    {menu.map((item, index) => (
-                        <Col
-                            key={index}
-                            md="3"
-                            onClick={() => {
-                                dispatch(actions.setDetailItem({ show: true, data: item }));
-                            }}
-                        >
-                            <OrderItem data={item} key={index} />
-                        </Col>
-                    ))}
-                </Row>
+                {loading ? (
+                    <div className={cx('loader')}>
+                        <span></span>
+                        <span></span>
+                    </div>
+                ) : (
+                    <Row className={cx('order-list')}>
+                        {menu.map((item, index) => (
+                            <Col
+                                key={index}
+                                md="3"
+                                onClick={() => {
+                                    dispatch(actions.setDetailItem({ show: true, data: item }));
+                                }}
+                            >
+                                <OrderItem data={item} key={index} />
+                            </Col>
+                        ))}
+                    </Row>
+                )}
             </section>
         </div>
     );

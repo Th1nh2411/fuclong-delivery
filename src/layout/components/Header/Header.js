@@ -71,18 +71,18 @@ function Header() {
                         <Search />
                     </div>
                     <div className={cx('side-group')}>
-                        <div className={cx('delivery-wrapper')}>
+                        <div
+                            onClick={() => {
+                                // setShowAddressForm(true);
+                                dispatch(actions.setDetailAddress({ show: true }));
+                            }}
+                            className={cx('delivery-wrapper')}
+                        >
                             <Image
                                 className={cx('delivery-img')}
                                 src="https://order.phuclong.com.vn/_next/static/images/delivery-686d7142750173aa8bc5f1d11ea195e4.png"
                             />
-                            <div
-                                onClick={() => {
-                                    // setShowAddressForm(true);
-                                    dispatch(actions.setDetailAddress({ show: true }));
-                                }}
-                                className={cx('delivery-body')}
-                            >
+                            <div className={cx('delivery-body')}>
                                 {state.detailAddress.address ? (
                                     <>
                                         <div className={cx('delivery-title')}>Giao hàng</div>{' '}

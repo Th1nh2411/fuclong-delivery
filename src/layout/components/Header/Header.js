@@ -7,7 +7,7 @@ import Image from '../../../components/Image';
 import Search from '../Search';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import config from '../../../config';
-import { HiShoppingCart, HiUserCircle } from 'react-icons/hi';
+import { HiUserCircle } from 'react-icons/hi';
 import { MdOutlineHistoryEdu } from 'react-icons/md';
 import Button from '../../../components/Button/Button';
 import { useContext, useEffect, useState } from 'react';
@@ -67,13 +67,11 @@ function Header() {
                                 <img src={images.logo} className={cx('logo')} alt="logo" />
                             </div>
                         </Link>
-                        {/* Search */}
                         <Search />
                     </div>
                     <div className={cx('side-group')}>
                         <div
                             onClick={() => {
-                                // setShowAddressForm(true);
                                 if (currentPath !== config.routes.payment) {
                                     dispatch(actions.setDetailAddress({ show: true }));
                                 }

@@ -136,8 +136,11 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
                         <div className={cx('order-name')}>{detailItem.name}</div>
                         <div className={cx('order-info')}>{detailItem.info}</div>
                         <div className={cx('order-price-wrapper')}>
-                            <div className={cx('order-price')}>
-                                {priceFormat((detailItem.price * data.discount) / 100)}
+                            <div className={cx('order-price-wrapper')}>
+                                <div className={cx('order-price')}>{priceFormat(detailItem.price)}₫</div>
+                                <div className={cx('order-price-discounted')}>
+                                    {priceFormat((detailItem.price * data.discount) / 100)}₫
+                                </div>
                             </div>
                             <div className={cx('order-quantity-wrapper')}>
                                 <HiMinusCircle
@@ -168,7 +171,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
                                                 onChange={(e) => setSize(Number(e.target.value))}
                                             ></Form.Check>
                                             <label htmlFor={`size-${index}`}>
-                                                {item.name} + {item.price}k
+                                                {item.name} + {item.price ? priceFormat(item.price) : 0}₫
                                             </label>
                                         </div>
                                     ))}
@@ -182,7 +185,9 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
                                     <label key={index} className={cx('order-topping-item')}>
                                         <div className={cx('order-topping-title')}>{topping.name}</div>
                                         <div className={cx('order-topping-check')}>
-                                            <span className={cx('order-topping-price')}>+{topping.price}.000đ</span>
+                                            <span className={cx('order-topping-price')}>
+                                                +{topping.price ? priceFormat(topping.price) : 0}₫
+                                            </span>
                                             <Form.Check
                                                 value={topping.idRecipe}
                                                 checked={
@@ -211,7 +216,7 @@ function DetailItem({ data = {}, onCloseModal = () => {}, editing = false }) {
                 }}
                 className={cx('order-add-btn')}
             >
-                {priceFormat(total)}đ - {editing ? 'Cập nhật sản phẩm' : 'Thêm vào giỏ hàng'}
+                {priceFormat(total)}₫ - {editing ? 'Cập nhật sản phẩm' : 'Thêm vào giỏ hàng'}
                 <MdOutlineAddShoppingCart className={cx('add-icon')} />
             </div>
         </Modal>

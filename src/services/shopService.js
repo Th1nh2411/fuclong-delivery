@@ -45,3 +45,19 @@ export const getToppingList = async (idRecipe, idShop) => {
         return error.response && error.response.data;
     }
 };
+export const getSearchResult = async (name, idShop, limit = 5) => {
+    const config = {
+        params: {
+            name,
+            limit,
+            idShop,
+        },
+    };
+    try {
+        const res = await httpRequest.get(`order/search`, config);
+        return res;
+    } catch (error) {
+        console.log(error);
+        return error.response && error.response.data;
+    }
+};

@@ -34,6 +34,7 @@
     object-fit: cover;
 }
 .delivery-wrapper {
+    margin-left: 10px;
     border-radius: 100px;
     width: 240px;
     height: 40px;
@@ -93,6 +94,7 @@
 }
 .login-btn {
     margin-left: 10px;
+    flex-shrink: 0;
 }
 
 //Sidebar

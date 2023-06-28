@@ -122,15 +122,12 @@ function CheckoutPage() {
                                     />
                                 )}
                             </div>
-                            <div
-                                onClick={() => dispatch(actions.setDetailAddress({ show: true }))}
-                                className={cx('info')}
-                            >
+                            <div className={cx('info')}>
                                 <div className={cx('info-body')}>
                                     <IoLocationSharp className={cx('info-icon')} />
                                     <div className={cx('info-detail')}>{state.detailAddress.address}</div>
                                 </div>
-                                <AiOutlineRight className={cx('info-actions')} />
+                                {/* <AiOutlineRight className={cx('info-actions')} /> */}
                             </div>
                             <div className={cx('info')}>
                                 <div className={cx('info-body')}>
@@ -144,7 +141,7 @@ function CheckoutPage() {
                                         </div>
                                     )}
                                 </div>
-                                <AiOutlineRight className={cx('info-actions')} />
+                                {/* <AiOutlineRight className={cx('info-actions')} /> */}
                             </div>
                             <div className={cx('delivery-subtitle')}>
                                 Thời gian đặt đơn : <span>{orderTime}</span>

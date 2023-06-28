@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import Image from '../Image/Image';
 import { Col } from 'react-bootstrap';
 import { MdOutlineAddShoppingCart } from 'react-icons/md';
+import { priceFormat } from '../../utils/format';
 
 const cx = classNames.bind(styles);
 
@@ -20,7 +21,7 @@ function OrderItem({ data = {} }) {
             </div>
             <div className={cx('order-name')}>{Recipe.name}</div>
             <div className={cx('order-footer')}>
-                <div className={cx('order-price')}>{Recipe.price}.000đ</div>
+                <div className={cx('order-price')}>{priceFormat((Recipe.price * discount) / 100)}₫</div>
                 <div className={cx('order-add-btn')}>
                     Đặt món
                     <MdOutlineAddShoppingCart className={cx('add-icon')} />

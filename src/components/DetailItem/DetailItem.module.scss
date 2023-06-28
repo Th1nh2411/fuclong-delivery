@@ -61,19 +61,20 @@
 .order-info {
     font-size: 1.4rem;
 }
-.order-price-wrapper {
-    margin-top: 4px;
-}
 
 .order-price-wrapper {
+    margin-top: 4px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-
 .order-price {
+    text-decoration: line-through;
+    margin-right: 4px;
+}
+.order-price-discounted {
     font-size: 2.2rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--primary-color);
 }
 .order-quantity-wrapper {

@@ -74,7 +74,9 @@ function Header() {
                         <div
                             onClick={() => {
                                 // setShowAddressForm(true);
-                                dispatch(actions.setDetailAddress({ show: true }));
+                                if (currentPath !== config.routes.payment) {
+                                    dispatch(actions.setDetailAddress({ show: true }));
+                                }
                             }}
                             className={cx('delivery-wrapper')}
                         >

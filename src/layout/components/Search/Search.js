@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styles from './Search.module.scss';
 import classNames from 'classnames/bind';
 import { AiFillCloseCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';
@@ -6,6 +6,12 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import { IoSearch } from 'react-icons/io5';
 import PopperWrapper from '../../../components/Popper';
 import { useDebounce } from '../../../hooks';
+import * as shopService from '../../../services/shopService';
+import { StoreContext, actions } from '../../../store';
+import OrderItem from '../../../components/OrderItem/OrderItem';
+import Image from '../../../components/Image/Image';
+import { MdOutlineAddShoppingCart } from 'react-icons/md';
+import { priceFormat } from '../../../utils/format';
 
 const cx = classNames.bind(styles);
 function Search() {
@@ -17,6 +23,7 @@ function Search() {
     const inputRef = useRef();
     const [showDetailRecipe, setShowDetailRecipe] = useState(false);
     const [detailRecipe, setDetailRecipe] = useState({});
+    const [state, dispatch] = useContext(StoreContext);
     useEffect(() => {
         if (!debouncedValue.trim()) {
             setSearchResult([]);
@@ -24,9 +31,8 @@ function Search() {
         }
         const fetchApi = async () => {
             setLoading(true);
-            const token = localStorage.getItem('token');
-            // const results = await searchServices.search(debouncedValue, token);
-            // setSearchResult(results.recipeJson);
+            const results = await shopService.getSearchResult(debouncedValue, state.idShop);
+            setSearchResult(results.recipes);
 
             setLoading(false);
         };
@@ -46,18 +52,14 @@ function Search() {
             setSearchValue(searchValue);
         }
     };
-    const getDetailRecipeData = async (id) => {
-        const token = localStorage.getItem('token');
-        // const results = await recipeService.getDetailRecipe(id, token);
-        // setDetailRecipe(results.recipe);
-        setShowDetailRecipe(true);
-    };
+
     const handleSubmit = (e) => {};
     return (
         // Using a wrapper div => solve warning Tippy, creating a newparentNode context
         <>
             <HeadlessTippy
                 offset={[0, 5]}
+                placement="bottom-start"
                 interactive
                 visible={showResult && searchResult && searchResult.length > 0}
                 onClickOutside={handleHideResult}
@@ -65,9 +67,36 @@ function Search() {
                     <>
                         <PopperWrapper>
                             <div className={cx('search-result')} tabIndex="-1">
-                                <h4 className={cx('search-title')}>Recipes</h4>
-                                {searchResult.map((data) => (
-                                    <div>Item</div>
+                                {/* <h4 className={cx('search-title')}>Recipes</h4> */}
+                                {searchResult.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => dispatch(actions.setDetailItem({ show: true, data: item }))}
+                                    >
+                                        <div className={cx('item-wrapper')}>
+                                            <div className={cx('d-flex')}>
+                                                <div className={cx('item-img-wrapper')}>
+                                                    <Image src={item.image} className={cx('item-img')} />
+                                                </div>
+                                                <div className={cx('item-info')}>
+                                                    <div className={cx('item-name')}>{item.name}</div>
+                                                    <div className={cx('item-price-wrapper')}>
+                                                        {item.discount !== 100 && (
+                                                            <div className={cx('item-price')}>
+                                                                {priceFormat(item.price)}₫
+                                                            </div>
+                                                        )}
+                                                        <div className={cx('item-price-discounted')}>
+                                                            {priceFormat((item.price * item.discount) / 100)}₫
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={cx('item-add-btn')}>
+                                                <MdOutlineAddShoppingCart className={cx('add-icon')} />
+                                            </div>
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
                         </PopperWrapper>

@@ -6,16 +6,16 @@ import Input from '../Input';
 import Button from '../Button';
 import images from '../../assets/images';
 import Image from '../Image/Image';
-import * as accountService from '../../services/accountService';
+import * as authService from '../../services/authService';
 import LocalStorageManager from '../../utils/LocalStorageManager';
 import { StoreContext, actions } from '../../store';
+import RegisterForm from './RegisterForm';
 
 const cx = classNames.bind(styles);
 
 function LoginForm({ onCloseModal = () => {} }) {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [loginForm, setLoginForm] = useState(true);
     const [loginStatus, setLoginStatus] = useState('');
     const localStorageManager = LocalStorageManager.getInstance();
@@ -25,7 +25,7 @@ function LoginForm({ onCloseModal = () => {} }) {
 
         // fetch api login
         const postLogin = async () => {
-            const results = await accountService.login({ phone: phoneNumber, password });
+            const results = await authService.login(phoneNumber, password);
             if (results && results.isSuccess) {
                 localStorageManager.setItem('token', results.token);
                 localStorageManager.setItem('userInfo', results.customer);
@@ -39,19 +39,11 @@ function LoginForm({ onCloseModal = () => {} }) {
                 );
                 const getNewInvoice = state.getCurrentInvoice();
                 onCloseModal();
-            } else if (results && results.isExist === false) {
-                setLoginStatus(results.message);
             } else {
-                setLoginStatus('Mật khẩu chưa đúng');
+                setLoginStatus('Số điện thoại hoặc mật khẩu chưa đúng');
             }
         };
-        // fetch api register
-        const postRegister = async () => {};
-        if (loginForm) {
-            postLogin();
-        } else {
-            postRegister();
-        }
+        postLogin();
     };
     const handleChangePhoneValue = (e) => {
         setPhoneNumber(e.target.value);
@@ -69,41 +61,37 @@ function LoginForm({ onCloseModal = () => {} }) {
             }}
         >
             <Image src={images.logo2} className={cx('logo')} />
-            <div className={cx('title')}>{loginForm ? 'Đăng nhập' : 'Đăng kí'}</div>
-            <form onSubmit={handleSubmitLogin}>
-                <Input onChange={handleChangePhoneValue} value={phoneNumber} title="Số điện thoại" />
-                <Input
-                    onChange={handleChangePasswordValue}
-                    value={password}
-                    title="Mật khẩu"
-                    type="password"
-                    errorCondition={loginStatus}
-                    errorMessage={loginStatus}
-                />
-                {!loginForm && (
-                    <Input
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        value={confirmPassword}
-                        type="password"
-                        title="Xác nhận mật khẩu"
-                        errorMessage="Xác nhận không trùng với mật khẩu trên"
-                        errorCondition={confirmPassword !== password && confirmPassword !== ''}
-                    />
-                )}
+            <div className={cx('title')}> {loginForm ? 'Đăng nhập' : 'Đăng kí'} </div>
+            {loginForm ? (
+                <form onSubmit={handleSubmitLogin}>
+                    <Input onChange={handleChangePhoneValue} value={phoneNumber} title="Số điện thoại" />
 
-                <Button className={cx('login-btn')} primary>
-                    {loginForm ? 'Đăng nhập' : 'Đăng kí tài khoản'}
-                </Button>
-                {loginForm ? (
+                    <Input
+                        onChange={handleChangePasswordValue}
+                        value={password}
+                        title="Mật khẩu"
+                        type="password"
+                        errorMessage={loginStatus}
+                        errorCondition={loginStatus}
+                    />
+
+                    <Button className={cx('login-btn')} primary>
+                        Đăng nhập
+                    </Button>
                     <div className={cx('toggle-form')}>
-                        Chưa có tài khoản? <span onClick={() => setLoginForm(!loginForm)}>Đăng kí</span>
+                        Chưa có tài khoản?{' '}
+                        <span
+                            onClick={() => {
+                                setLoginForm(false);
+                            }}
+                        >
+                            Đăng kí
+                        </span>
                     </div>
-                ) : (
-                    <div className={cx('toggle-form')}>
-                        <span onClick={() => setLoginForm(!loginForm)}>Đăng nhập</span>
-                    </div>
-                )}
-            </form>
+                </form>
+            ) : (
+                <RegisterForm onClickChangeForm={() => setLoginForm(true)} />
+            )}
         </Modal>
     );
 }

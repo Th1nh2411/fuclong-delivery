@@ -27,7 +27,6 @@
 .order-name {
     margin: 15px 0;
     font-weight: 700;
-    color: var(--primary-color);
     line-height: 1.2;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -42,6 +41,7 @@
 }
 .order-price {
     font-weight: 800;
+    color: var(--primary-color);
 }
 .order-add-btn {
     display: flex;

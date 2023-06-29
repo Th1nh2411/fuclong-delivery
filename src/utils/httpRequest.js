@@ -10,8 +10,9 @@ export const post = async (path, body = {}, header = {}) => {
     const response = await httpRequest.post(path, body, header);
     return response.data;
 };
-export const del = async (path, config = {}) => {
-    const response = await httpRequest.delete(path, config);
+export const del = async (path, body = {}, config = {}) => {
+    const data = { data: body, ...config };
+    const response = await httpRequest.delete(path, data);
     return response.data;
 };
 export const put = async (path, body = {}, header = {}) => {

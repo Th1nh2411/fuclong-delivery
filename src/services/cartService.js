@@ -56,7 +56,7 @@ export const delCartItem = async (idProduct, token) => {
     };
 
     try {
-        const res = await httpRequest.del(`order/deleteProductCart/${idProduct}`, config);
+        const res = await httpRequest.del(`order/deleteProductCart/${idProduct}`, {}, config);
         return res;
     } catch (error) {
         console.log(error);
@@ -72,7 +72,7 @@ export const delUnavailableItem = async (listIdProduct, token) => {
     };
 
     try {
-        const res = await httpRequest.del(`order/deleteProductCart`, config);
+        const res = await httpRequest.del(`order/deleteProductCart`, {}, config);
         return res;
     } catch (error) {
         console.log(error);

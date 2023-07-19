@@ -79,6 +79,15 @@ function LoginForm({ onCloseModal = () => {} }) {
                         Đăng nhập
                     </Button>
                     <div className={cx('toggle-form')}>
+                        <span
+                            onClick={() => {
+                                setLoginForm(false);
+                            }}
+                        >
+                            Quên mật khẩu?
+                        </span>
+                    </div>
+                    <div className={cx('toggle-form')}>
                         Chưa có tài khoản?{' '}
                         <span
                             onClick={() => {
